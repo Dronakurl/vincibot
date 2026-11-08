@@ -26,7 +26,7 @@ from pathlib import Path
 from typing import Any
 
 from ._woerter import (BEWEGUNGEN, FARBEN, FARBEN_SENSOR, GEFUEHLE, GERAEUSCHE, INSTRUMENTE,
-                       LIEDER, TAENZE)
+                       LIEDER, POSITION_NAMEN, TAENZE)
 
 __all__ = ["Ergebnis", "UmwandlungsFehler", "scratch_zu_python", "python_zu_scratch",
            "scratch_datei_zu_python", "python_datei_zu_scratch"]
@@ -411,12 +411,12 @@ class _ZuPython:
         if op == "matatacarLight_rgbLedAllSet":
             return [f"roboter.licht({self.farbe(b)})"]
         if op == "matatacarLight_rgbLedSingleSet":
-            return [f"roboter.licht_einzeln({self.wert(b, 'LED_INDEX', '1')}, {self.farbe(b)})"]
+            return [f"roboter.licht_einzeln({self.position(b)}, {self.farbe(b)})"]
         if op == "matatacarLight_rgbLedAllSet1":
             return [f"roboter.licht(({self.wert(b, 'RED_VALUE')}, {self.wert(b, 'GREEN_VALUE')}, "
                     f"{self.wert(b, 'BLUE_VALUE')}))"]
         if op == "matatacarLight_rgbLedSingleSet1":
-            return [f"roboter.licht_einzeln({self.wert(b, 'LED_INDEX', '1')}, ({self.wert(b, 'RED_VALUE')}, "
+            return [f"roboter.licht_einzeln({self.position(b)}, ({self.wert(b, 'RED_VALUE')}, "
                     f"{self.wert(b, 'GREEN_VALUE')}, {self.wert(b, 'BLUE_VALUE')}))"]
         if op == "matatacarLight_rgbLedAllOff":
             return ["roboter.licht_aus()"]
@@ -473,6 +473,14 @@ class _ZuPython:
             return f"roboter.{methode}({tabelle[englisch]!r}{zusatz})"
         self.warne(f"'{englisch}' hat keinen deutschen Namen; es wird 'roh' verwendet.")
         return f"roboter.roh({roh_befehl + '(' + repr(englisch) + zusatz + ')'!r})"
+
+    def position(self, b: dict[str, Any]) -> str:
+        """Nummer des Lichts (1-6) als Positionsname."""
+        wert = self.wert(b, "LED_INDEX", "1")
+        if re.fullmatch(r"\d+", wert) and int(wert) in POSITION_NAMEN:
+            return repr(POSITION_NAMEN[int(wert)])
+        self.warne(f"Die Nummer des Lichts ({wert}) muss eine feste Zahl von 1 bis 6 sein; es wird 'links oben' verwendet.")
+        return "'links oben'"
 
     def farbe(self, b: dict[str, Any]) -> str:
         eingabe = b.get("inputs", {}).get("COLOR")

@@ -8,7 +8,10 @@ async def haupt():
     async with VinciBotAsync() as roboter:
         _ = await asyncio.gather(
             roboter.vorwaerts(20),
-            roboter.lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]),
+            roboter.lichter({
+                "links oben": "rot", "links mitte": "gelb", "links unten": "gruen",
+                "rechts unten": "blau", "rechts mitte": "lila", "rechts oben": "weiss",
+            }),
         )
         await roboter.licht_aus()
 

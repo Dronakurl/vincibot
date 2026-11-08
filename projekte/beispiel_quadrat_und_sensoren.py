@@ -29,4 +29,4 @@ with VinciBot() as roboter:
         roboter.stoppe()
         eine_funktion_die_es_nicht_gibt = 3
         roboter.sprich("hello")
-        roboter.licht_einzeln(3, "rot")
+        roboter.licht_einzeln("links oben", "rot")

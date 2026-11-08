@@ -48,6 +48,15 @@ INSTRUMENTE: list[str] = ["klavier", "e-klavier", "orgel", "gitarre", "e-gitarre
 NOTEN: dict[str, int] = {"c": 262, "d": 294, "e": 330, "f": 349, "g": 392, "a": 440, "h": 494}
 
 
+# Die sechs Lichter von vorne gesehen:   1 6 / 2 5 / 3 4  (Nummer = Platz in der Befehlsliste des Roboters)
+POSITIONEN: dict[str, int] = {
+    "links oben": 1, "links mitte": 2, "links unten": 3,
+    "rechts unten": 4, "rechts mitte": 5, "rechts oben": 6,
+}
+POSITIONEN.update({name.replace(" ", "_"): nr for name, nr in list(POSITIONEN.items())})
+POSITION_NAMEN: dict[int, str] = {nr: name for name, nr in POSITIONEN.items() if " " in name}
+
+
 class RoboterFehler(Exception):
     """Etwas ist beim Steuern des Roboters schiefgegangen."""
 

@@ -34,7 +34,7 @@ with VinciBot() as roboter:
             roboter.tanze("walzer")
         roboter.warte(random.randint(1, 3))
         roboter.ton("c", 1)
-        roboter.licht_einzeln(3, "rot")
+        roboter.licht_einzeln("links oben", "rot")
 '''
 
 

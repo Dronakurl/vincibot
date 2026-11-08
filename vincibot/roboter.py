@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import threading
-from collections.abc import Callable, Coroutine, Sequence
+from collections.abc import Callable, Coroutine, Mapping, Sequence
 from types import TracebackType
 from typing import TypeVar
 
@@ -208,26 +208,26 @@ class VinciBot:
         """
         return self._laufen(self._roboter.licht_aus())
 
-    def licht_einzeln(self, nummer: int, farbe: Farbe) -> None:
-        """Ein einzelnes Licht (Nummer 1 bis 6) in einer Farbe.
+    def licht_einzeln(self, position: str, farbe: Farbe) -> None:
+        """Ein einzelnes Licht in einer Farbe, z. B. licht_einzeln("links oben", "rot").
 
-        So sind die Lichter angeordnet (von vorne gesehen):
+        Positionen (von vorne gesehen):
 
-            1  6
-            2  5
-            3  4
+            links oben     rechts oben
+            links mitte    rechts mitte
+            links unten    rechts unten
         """
-        return self._laufen(self._roboter.licht_einzeln(nummer, farbe))
+        return self._laufen(self._roboter.licht_einzeln(position, farbe))
 
-    def lichter(self, farben: Sequence[Farbe]) -> None:
-        """Alle sechs Lichter einzeln, z. B. lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]).
+    def lichter(self, farben: Mapping[str, Farbe]) -> None:
+        """Mehrere Lichter auf einmal, jedes mit eigener Farbe. Nicht genannte Lichter gehen aus.
 
-        Reihenfolge: Licht 1 bis 3 links von oben nach unten, Licht 4 bis 6 rechts von unten
-        nach oben:
+            roboter.lichter({
+                "links oben": "rot", "rechts oben": "gruen",
+                "links unten": "blau", "rechts unten": "gelb",
+            })
 
-            1  6
-            2  5
-            3  4
+        Positionen: links oben, links mitte, links unten, rechts oben, rechts mitte, rechts unten
         """
         return self._laufen(self._roboter.lichter(farben))
 

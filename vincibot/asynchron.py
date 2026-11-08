@@ -9,7 +9,7 @@ Beispiel:
 
     async def haupt():
         async with VinciBotAsync() as roboter:
-            await asyncio.gather(roboter.vorwaerts(20), roboter.lichter(["rot"] * 6))
+            await asyncio.gather(roboter.vorwaerts(20), roboter.licht("rot"))
 
     asyncio.run(haupt())
 """
@@ -17,13 +17,13 @@ from __future__ import annotations
 
 import asyncio
 import math
-from collections.abc import AsyncIterator, Callable, Sequence
+from collections.abc import AsyncIterator, Callable, Mapping, Sequence
 from types import TracebackType
 
 from ._protokoll import SEQUENZ, Sensorwerte, text_literal
 from ._verbindung import Antwort, Verbindung
 from ._woerter import (BEWEGUNGEN, FARBEN_SENSOR, GEFUEHLE, GERAEUSCHE, INSTRUMENTE, LIEDER,
-                       NOTEN, TAENZE, Farbe, RoboterFehler, farbe_umrechnen, waehle)
+                       NOTEN, POSITIONEN, TAENZE, Farbe, RoboterFehler, farbe_umrechnen, waehle)
 
 
 class VinciBotAsync:
@@ -128,35 +128,34 @@ class VinciBotAsync:
         r, g, b = farbe_umrechnen(farbe)
         await self._befehl(f"leds.show_all({r}, {g}, {b})", "led_alle")
 
-    async def licht_einzeln(self, nummer: int, farbe: Farbe) -> None:
-        """Ein einzelnes Licht (Nummer 1 bis 6) in einer Farbe.
+    async def licht_einzeln(self, position: str, farbe: Farbe) -> None:
+        """Ein einzelnes Licht in einer Farbe, z. B. licht_einzeln("links oben", "rot").
 
-        So sind die Lichter angeordnet (von vorne gesehen):
+        Positionen (von vorne gesehen):
 
-            1  6
-            2  5
-            3  4
+            links oben     rechts oben
+            links mitte    rechts mitte
+            links unten    rechts unten
         """
-        if not 1 <= nummer <= 6:
-            raise RoboterFehler("Die Lichter sind von 1 bis 6 nummeriert.")
+        nummer = waehle(position, POSITIONEN, "die Position")
         r, g, b = farbe_umrechnen(farbe)
         await self._befehl(f"leds.show_single({nummer}, {r}, {g}, {b})", "led_einzeln")
 
-    async def lichter(self, farben: Sequence[Farbe]) -> None:
-        """Alle sechs Lichter einzeln, z. B. lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]).
+    async def lichter(self, farben: Mapping[str, Farbe]) -> None:
+        """Mehrere Lichter auf einmal, jedes mit eigener Farbe. Nicht genannte Lichter gehen aus.
 
-        Reihenfolge: Licht 1 bis 3 links von oben nach unten, Licht 4 bis 6 rechts von unten
-        nach oben:
+            roboter.lichter({
+                "links oben": "rot", "rechts oben": "gruen",
+                "links unten": "blau", "rechts unten": "gelb",
+            })
 
-            1  6
-            2  5
-            3  4
+        Positionen: links oben, links mitte, links unten, rechts oben, rechts mitte, rechts unten
         """
-        farben = list(farben)
-        if len(farben) != 6:
-            raise RoboterFehler("Gib genau sechs Farben an – eine für jedes Licht.")
-        werte = [wert for farbe in farben for wert in farbe_umrechnen(farbe)]
-        await self._befehl(f"leds.display({werte})", "led_feld")
+        werte: dict[int, tuple[int, int, int]] = {}
+        for position, farbe in farben.items():
+            werte[waehle(position, POSITIONEN, "die Position")] = farbe_umrechnen(farbe)
+        liste = [wert for nummer in range(1, 7) for wert in werte.get(nummer, (0, 0, 0))]
+        await self._befehl(f"leds.display({liste})", "led_feld")
 
     async def licht_aus(self) -> None:
         """Schaltet alle Lichter aus."""

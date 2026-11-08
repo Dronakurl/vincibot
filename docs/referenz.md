@@ -73,26 +73,26 @@ Setzt Raddurchmesser, Radabstand usw. auf die Werkseinstellung zurück.
 
 Alle sechs Lichter in einer Farbe, z. B. licht("rot") oder licht((255, 0, 128)).
 
-### `licht_einzeln(nummer: 'int', farbe: 'Farbe') -> 'None'`
+### `licht_einzeln(position: 'str', farbe: 'Farbe') -> 'None'`
 
-Ein einzelnes Licht (Nummer 1 bis 6) in einer Farbe.
+Ein einzelnes Licht in einer Farbe, z. B. licht_einzeln("links oben", "rot").
 
-So sind die Lichter angeordnet (von vorne gesehen):
+Positionen (von vorne gesehen):
 
-    1  6
-    2  5
-    3  4
+    links oben     rechts oben
+    links mitte    rechts mitte
+    links unten    rechts unten
 
-### `lichter(farben: 'Sequence[Farbe]') -> 'None'`
+### `lichter(farben: 'Mapping[str, Farbe]') -> 'None'`
 
-Alle sechs Lichter einzeln, z. B. lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]).
+Mehrere Lichter auf einmal, jedes mit eigener Farbe. Nicht genannte Lichter gehen aus.
 
-Reihenfolge: Licht 1 bis 3 links von oben nach unten, Licht 4 bis 6 rechts von unten
-nach oben:
+    roboter.lichter({
+        "links oben": "rot", "rechts oben": "gruen",
+        "links unten": "blau", "rechts unten": "gelb",
+    })
 
-    1  6
-    2  5
-    3  4
+Positionen: links oben, links mitte, links unten, rechts oben, rechts mitte, rechts unten
 
 ### `licht_aus() -> 'None'`
 

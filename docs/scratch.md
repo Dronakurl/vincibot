@@ -24,7 +24,7 @@ In Python: `scratch_zu_python(datei)`, `scratch_datei_zu_python(ein, aus)`, `pyt
 - Rundlauf Python → Scratch → Python ergibt wieder dasselbe Programm (Test `test_rundlauf_python_scratch_python`).
 
 **Nicht verifiziert:** dass der Roboter jedes erzeugte Programm genauso ausführt wie die Original-Blöcke
-(vor allem die Drehrichtung bei `drehe_mit_tempo`: positiv = links, so wie in der Hersteller-Oberfläche, am Roboter aber nicht nachgeprüft) und die Namen einiger Menüs, die nur im
+(vor allem das Verhalten bei Zeiteinheiten (`seconds`) und Zusatz-Erweiterungen) und die Namen einiger Menüs, die nur im
 Python→Scratch-Weg vorkommen (`motionTurn`, `motionAngleUint`, `motionDirection`, `restForBeats`).
 Sie wurden aus dem Frontend-Code abgeleitet, nicht an einem Beispielprojekt geprüft.
 
@@ -46,7 +46,7 @@ Sie wurden aus dem Frontend-Code abgeleitet, nicht an einem Beispielprojekt gepr
 | motor run / stop (Motor-Erweiterung) | `rad_drehen`, `rad_stopp` |
 | dance / emotion / action | `tanze`, `gefuehl`, `bewege_dich` |
 | write, show image (for … s), turn off, brightness, pixel, rotate, orientation | `schreibe`, `zeige_bild(_fuer)`, `display_aus`, `display_helligkeit`, `zeige_pixel`, `display_drehen`, `display_richtung` |
-| set all LEDs (Farbe / R,G,B), set LED, all off | `licht`, `licht_einzeln`, `licht_aus` |
+| set all LEDs (Farbe / R,G,B), set LED, all off | `licht`, `licht_einzeln` (Nummer 1–6 wird zum Positionsnamen), `licht_aus` |
 | sound / sing / say / audio play (until done) | `geraeusch`, `lied`, `sprich`, `spiele_datei` |
 | play note, rest, tempo, instrument | `ton_hoehe`, `pause`, `tempo`, `tempo_aendern`, `instrument` |
 | send ir message, ir received | `sende_infrarot`, `infrarot_angekommen` |

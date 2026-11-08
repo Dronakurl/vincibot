@@ -47,3 +47,10 @@ def test_bild_bytes_wie_die_hersteller_oberflaeche():
     assert daten[2] == 0x02 and daten[3] == 0x01
     # Beispiel aus der API-Beschreibung (Auge): 0x38 = Pixel 3, 4, 5
     assert VinciBotAsync._bild_daten(["...###.." + "." * 8] + ["." * 16] * 7)[0] == 0x38
+
+
+def test_positionen_der_lichter():
+    from vincibot._woerter import POSITIONEN, POSITION_NAMEN
+    assert POSITIONEN["links oben"] == 1 and POSITIONEN["rechts oben"] == 6
+    assert POSITIONEN["rechts unten"] == 4 and POSITIONEN["links_unten"] == 3
+    assert POSITION_NAMEN[5] == "rechts mitte"

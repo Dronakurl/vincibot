@@ -97,8 +97,8 @@ Die wichtigsten Befehle (`roboter.` davor schreiben). Die **vollständige Liste 
 | drehen | `links(90)` · `rechts(45)` (Grad) |
 | dauerhaft fahren und anhalten | `fahre("vorwaerts", tempo=50)` · `stoppe()` |
 | Lichter einschalten | `licht("rot")` · `licht((255, 0, 128))` |
-| ein einzelnes Licht (1–6) | `licht_einzeln(3, "gelb")` – Anordnung siehe unten |
-| sechs Lichter bunt | `lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"])` |
+| ein einzelnes Licht | `licht_einzeln("links oben", "gelb")` – Positionen siehe unten |
+| mehrere Lichter bunt | `lichter({"links oben": "rot", "rechts unten": "blau"})` |
 | Lichter ausschalten | `licht_aus()` |
 | etwas auf das Display schreiben | `schreibe("Hallo")` |
 | ein Bild zeigen | `zeige_bild([...])` – siehe Beispiel 06 |
@@ -117,12 +117,12 @@ Die wichtigsten Befehle (`roboter.` davor schreiben). Die **vollständige Liste 
 | alle Sensorwerte | `sensorwerte()` |
 | warten | `warte(2)` (Sekunden) |
 
-**Die sechs Lichter** sind so nummeriert (links oben ist Licht 1):
+**Die sechs Lichter** heißen nach ihrer Position (von vorne gesehen):
 
 ```
-1  6
-2  5
-3  4
+links oben    rechts oben
+links mitte   rechts mitte
+links unten   rechts unten
 ```
 
 **Werte, die du verwenden kannst**
@@ -167,7 +167,7 @@ async def haupt():
     async with VinciBotAsync() as roboter:
         await asyncio.gather(
             roboter.vorwaerts(20),
-            roboter.lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]),
+            roboter.lichter({"links oben": "rot", "rechts oben": "gruen"}),
         )
 
 asyncio.run(haupt())
@@ -241,4 +241,4 @@ Für Befehle, die dieses Paket nicht kennt, gibt es `roboter.roh("<MicroPython-B
 
 ### Teststand
 
-Getestet am echten Roboter (Linux, BlueZ): Fahren, Drehen, Lichter, Display (Text, Bild, Pixel), Töne, Noten, Lied „funkel“, Sprechen, Gefühle, Bewegungen, Tänze, Sensorabfragen und gleichzeitige Befehle. Die Namen aller Geräusche, Tänze, Gefühle und Bewegungen wurden einmal durchgespielt und vom Roboter angenommen. Der Scratch-Konverter ist mit einem Beispielprojekt und per Rundlauf getestet; ein erzeugtes Scratch-Projekt wurde in der Web-Oberfläche geladen. Nicht ausprobiert: ob der Roboter ein umgewandeltes Programm genauso ausführt wie die Blöcke, die Drehrichtung von `drehe_mit_tempo`, die übrigen Lieder (außer „funkel“), `spiele_datei`, Infrarot, Fernbedienung, Farbsensor-Kalibrierung und die Trommel-Namen.
+Getestet am echten Roboter (Linux, BlueZ): Fahren, Drehen, Lichter, Display (Text, Bild, Pixel), Töne, Noten, Lied „funkel“, Sprechen, Gefühle, Bewegungen, Tänze, Sensorabfragen und gleichzeitige Befehle. Die Namen aller Geräusche, Tänze, Gefühle und Bewegungen wurden einmal durchgespielt und vom Roboter angenommen. Der Scratch-Konverter ist mit einem Beispielprojekt und per Rundlauf getestet; ein erzeugtes Scratch-Projekt wurde in der Web-Oberfläche geladen. Am Roboter bestätigt: Anordnung der Lichter, Bildanzeige, Farben und die Drehrichtung von `drehe_mit_tempo` (positiv = links). Infrarot: Senden und Abfragen laufen ohne Fehler, ein Empfang wurde aber nicht beobachtet. Nicht ausprobiert: ob der Roboter ein umgewandeltes Programm genauso ausführt wie die Blöcke, die übrigen Lieder (außer „funkel“), `spiele_datei`, Empfang von Infrarot und Fernbedienung, Farbsensor-Kalibrierung und die Trommel-Namen.

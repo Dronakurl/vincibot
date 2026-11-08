@@ -2,6 +2,9 @@
 from vincibot import VinciBot
 
 with VinciBot() as roboter:
-    roboter.lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"])
+    roboter.lichter({
+        "links oben": "rot", "links mitte": "gelb", "links unten": "gruen",
+        "rechts unten": "blau", "rechts mitte": "lila", "rechts oben": "weiss",
+    })
     roboter.tanze("samba")
     roboter.licht_aus()
