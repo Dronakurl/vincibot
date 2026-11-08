@@ -210,11 +210,24 @@ class VinciBot:
 
     def licht_einzeln(self, nummer: int, farbe: Farbe) -> None:
         """Ein einzelnes Licht (Nummer 1 bis 6) in einer Farbe.
+
+        So sind die Lichter angeordnet (von vorne gesehen):
+
+            1  6
+            2  5
+            3  4
         """
         return self._laufen(self._roboter.licht_einzeln(nummer, farbe))
 
     def lichter(self, farben: Sequence[Farbe]) -> None:
         """Alle sechs Lichter einzeln, z. B. lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]).
+
+        Reihenfolge: Licht 1 bis 3 links von oben nach unten, Licht 4 bis 6 rechts von unten
+        nach oben:
+
+            1  6
+            2  5
+            3  4
         """
         return self._laufen(self._roboter.lichter(farben))
 

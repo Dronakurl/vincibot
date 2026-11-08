@@ -129,14 +129,29 @@ class VinciBotAsync:
         await self._befehl(f"leds.show_all({r}, {g}, {b})", "led_alle")
 
     async def licht_einzeln(self, nummer: int, farbe: Farbe) -> None:
-        """Ein einzelnes Licht (Nummer 1 bis 6) in einer Farbe."""
+        """Ein einzelnes Licht (Nummer 1 bis 6) in einer Farbe.
+
+        So sind die Lichter angeordnet (von vorne gesehen):
+
+            1  6
+            2  5
+            3  4
+        """
         if not 1 <= nummer <= 6:
             raise RoboterFehler("Die Lichter sind von 1 bis 6 nummeriert.")
         r, g, b = farbe_umrechnen(farbe)
         await self._befehl(f"leds.show_single({nummer}, {r}, {g}, {b})", "led_einzeln")
 
     async def lichter(self, farben: Sequence[Farbe]) -> None:
-        """Alle sechs Lichter einzeln, z. B. lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"])."""
+        """Alle sechs Lichter einzeln, z. B. lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]).
+
+        Reihenfolge: Licht 1 bis 3 links von oben nach unten, Licht 4 bis 6 rechts von unten
+        nach oben:
+
+            1  6
+            2  5
+            3  4
+        """
         farben = list(farben)
         if len(farben) != 6:
             raise RoboterFehler("Gib genau sechs Farben an – eine für jedes Licht.")

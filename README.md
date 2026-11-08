@@ -97,7 +97,7 @@ Die wichtigsten Befehle (`roboter.` davor schreiben). Die **vollständige Liste 
 | drehen | `links(90)` · `rechts(45)` (Grad) |
 | dauerhaft fahren und anhalten | `fahre("vorwaerts", tempo=50)` · `stoppe()` |
 | Lichter einschalten | `licht("rot")` · `licht((255, 0, 128))` |
-| ein einzelnes Licht (1–6) | `licht_einzeln(3, "gelb")` |
+| ein einzelnes Licht (1–6) | `licht_einzeln(3, "gelb")` – Anordnung siehe unten |
 | sechs Lichter bunt | `lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"])` |
 | Lichter ausschalten | `licht_aus()` |
 | etwas auf das Display schreiben | `schreibe("Hallo")` |
@@ -116,6 +116,14 @@ Die wichtigsten Befehle (`roboter.` davor schreiben). Die **vollständige Liste 
 | Farbe am Boden erkennen | `sieht_farbe("rot")` |
 | alle Sensorwerte | `sensorwerte()` |
 | warten | `warte(2)` (Sekunden) |
+
+**Die sechs Lichter** sind so nummeriert (links oben ist Licht 1):
+
+```
+1  6
+2  5
+3  4
+```
 
 **Werte, die du verwenden kannst**
 

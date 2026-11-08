@@ -77,9 +77,22 @@ Alle sechs Lichter in einer Farbe, z. B. licht("rot") oder licht((255, 0, 128)).
 
 Ein einzelnes Licht (Nummer 1 bis 6) in einer Farbe.
 
+So sind die Lichter angeordnet (von vorne gesehen):
+
+    1  6
+    2  5
+    3  4
+
 ### `lichter(farben: 'Sequence[Farbe]') -> 'None'`
 
 Alle sechs Lichter einzeln, z. B. lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]).
+
+Reihenfolge: Licht 1 bis 3 links von oben nach unten, Licht 4 bis 6 rechts von unten
+nach oben:
+
+    1  6
+    2  5
+    3  4
 
 ### `licht_aus() -> 'None'`
 
