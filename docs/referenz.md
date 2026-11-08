@@ -323,5 +323,5 @@ Die Firmware-Version des Roboters als Text, z. B. "1.2.0".
 
 ### `roh(befehl: 'str', zeitlimit: 'float' = 15) -> 'str | None'`
 
-Führt beliebigen MicroPython-Code des Roboters aus (siehe docs/firmware-api/) und gibt
+Führt beliebigen MicroPython-Code des Roboters aus (Befehlsliste: Python-Editor auf vinci.matatastudio.com) und gibt
 die Antwort als Text zurück. Beispiel: `await roboter.roh("motion.stop_moving()")`.

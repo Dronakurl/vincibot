@@ -470,7 +470,7 @@ class VinciBotAsync:
         return await self._verbindung.firmware_abfragen()
 
     async def roh(self, befehl: str, zeitlimit: float = 15) -> str | None:
-        """Führt beliebigen MicroPython-Code des Roboters aus (siehe docs/firmware-api/) und gibt
+        """Führt beliebigen MicroPython-Code des Roboters aus (Befehlsliste: Python-Editor auf vinci.matatastudio.com) und gibt
         die Antwort als Text zurück. Beispiel: `await roboter.roh("motion.stop_moving()")`."""
         antwort = await self._antwort(befehl, "abfrage", zeitlimit)
         return None if antwort is None else antwort.text

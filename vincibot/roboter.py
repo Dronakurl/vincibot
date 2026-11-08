@@ -305,7 +305,7 @@ class VinciBot:
         return self._laufen(self._roboter.rechts(grad))
 
     def roh(self, befehl: str, zeitlimit: float = 15) -> str | None:
-        """Führt beliebigen MicroPython-Code des Roboters aus (siehe docs/firmware-api/) und gibt
+        """Führt beliebigen MicroPython-Code des Roboters aus (Befehlsliste: Python-Editor auf vinci.matatastudio.com) und gibt
         die Antwort als Text zurück. Beispiel: `await roboter.roh("motion.stop_moving()")`.
         """
         return self._laufen(self._roboter.roh(befehl, zeitlimit))

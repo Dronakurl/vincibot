@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vincibot"
+license = "MIT"
 version = "0.2.0"
 description = "VinciBot (MatataStudio) per Bluetooth mit Python steuern – einfach und auf Deutsch"
 readme = "README.md"

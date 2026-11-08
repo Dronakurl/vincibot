@@ -60,7 +60,7 @@ Weitere Paketarten: `0x33` Tasten, `0x7e` Infrarot (laut Web-Oberfläche).
 ## Tipps
 - Der Roboter akzeptiert nur **eine** Verbindung gleichzeitig.
 - Befehle mit falschen Argumenten (z. B. Zahl statt Name) lösen Fehlertöne aus. Die offizielle
-  Beschreibung der Roboter-Befehle liegt in `docs/firmware-api/`.
+  Beschreibung der Roboter-Befehle gibt es im Python-Editor auf vinci.matatastudio.com.
 
 ## Firmware
 - Die Version kommt in den Bytes 2–4 der Antwort auf `01 01` (Stand dieser Doku: Roboter mit **1.2.4**).

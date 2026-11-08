@@ -214,7 +214,7 @@ Die Tabelle der Blöcke und alle Grenzen stehen in [docs/scratch.md](docs/scratc
 
 ## 10. Wie funktioniert das?
 
-Der VinciBot ist ein kleiner Computer (ESP32-S3), auf dem MicroPython läuft. Dieses Paket sendet per Bluetooth Low Energy kleine Pakete mit MicroPython-Befehlen wie `motion.move_position("forward", 10, "cm")`. Der Roboter führt sie aus, antwortet und meldet laufend seine Sensorwerte. Das Paketformat wurde aus der offiziellen Web-Oberfläche (vinci.matatastudio.com) abgeleitet und gegen deren Bluetooth-Verkehr geprüft. Details: [docs/protokoll.md](docs/protokoll.md). Die offizielle Beschreibung der Roboter-Befehle liegt in [docs/firmware-api/](docs/firmware-api/).
+Der VinciBot ist ein kleiner Computer (ESP32-S3), auf dem MicroPython läuft. Dieses Paket sendet per Bluetooth Low Energy kleine Pakete mit MicroPython-Befehlen wie `motion.move_position("forward", 10, "cm")`. Der Roboter führt sie aus, antwortet und meldet laufend seine Sensorwerte. Das Paketformat wurde aus der offiziellen Web-Oberfläche (vinci.matatastudio.com) abgeleitet und gegen deren Bluetooth-Verkehr geprüft. Details: [docs/protokoll.md](docs/protokoll.md). Die offizielle Beschreibung der Roboter-Befehle findest du im Python-Editor auf vinci.matatastudio.com.
 
 ## 11. Für Entwickler
 
@@ -240,8 +240,12 @@ python werkzeuge/erzeuge_roboter.py      # roboter.py neu erzeugen, nachdem asyn
 python werkzeuge/erzeuge_referenz.py    # Referenz neu erzeugen
 ```
 
-Für Befehle, die dieses Paket nicht kennt, gibt es `roboter.roh("<MicroPython-Befehl>")`. Nicht unterstützt sind bisher die Erweiterungen mit Kamera-Modul (`vision`, `lcd`), WLAN/MQTT und Zusatzmotoren – die API-Beschreibung dafür liegt in `docs/firmware-api/`, und über `roh()` sind sie prinzipiell erreichbar.
+Für Befehle, die dieses Paket nicht kennt, gibt es `roboter.roh("<MicroPython-Befehl>")`. Nicht unterstützt sind bisher die Erweiterungen mit Kamera-Modul (`vision`, `lcd`), WLAN/MQTT und Zusatzmotoren – die API-Beschreibung dafür findest du im Python-Editor auf vinci.matatastudio.com, und über `roh()` sind sie prinzipiell erreichbar.
 
 ### Teststand
 
 Getestet am echten Roboter (Linux, BlueZ): Fahren, Drehen, Lichter, Display (Text, Bild, Pixel), Töne, Noten, Lied „funkel“, Sprechen, Gefühle, Bewegungen, Tänze, Sensorabfragen und gleichzeitige Befehle. Die Namen aller Geräusche, Tänze, Gefühle und Bewegungen wurden einmal durchgespielt und vom Roboter angenommen. Der Scratch-Konverter ist mit einem Beispielprojekt und per Rundlauf getestet; ein erzeugtes Scratch-Projekt wurde in der Web-Oberfläche geladen. Am Roboter bestätigt: Anordnung der Lichter, Bildanzeige, Farben und die Drehrichtung von `drehe_mit_tempo` (positiv = links). Infrarot: Senden und Abfragen laufen ohne Fehler, ein Empfang wurde aber nicht beobachtet. Nicht ausprobiert: ob der Roboter ein umgewandeltes Programm genauso ausführt wie die Blöcke, die übrigen Lieder (außer „funkel“), `spiele_datei`, Empfang von Infrarot und Fernbedienung, Farbsensor-Kalibrierung und die Trommel-Namen.
+
+## Lizenz
+
+MIT, siehe [LICENSE](LICENSE). Inoffizielles Projekt; „VinciBot“ und „MatataStudio“ sind Marken ihrer Inhaber.
