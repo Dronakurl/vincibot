@@ -23,9 +23,11 @@ GEFUEHLE: dict[str, str] = {
     "schlaefrig": "sleepy", "schläfrig": "sleepy", "wach": "awake", "stolz": "proud",
 }
 TAENZE: dict[str, str] = {"tango": "tango", "walzer": "waltz", "steppen": "tap", "samba": "samba",
-          "polonaise": "polonaise", "jazz": "jazz", "rock": "rock", "polka": "polka"}
+          "polonaise": "polonaise", "jazz": "jazz", "rock": "rock", "polka": "polka",
+          "rumba": "rumba", "disco": "disco", "mazurka": "mazurka"}
 BEWEGUNGEN: dict[str, str] = {"umschauen": "look around", "verletzt": "hurt", "sprinten": "sprint",
-              "kreisen": "circling", "schuetteln": "shake", "schütteln": "shake"}
+              "kreisen": "circling", "schuetteln": "shake", "schütteln": "shake",
+              "frech": "naughty", "stolz": "proud"}
 GERAEUSCHE: dict[str, str] = {
     "krankenwagen": "ambulance", "polizei": "police car", "feuerwehr": "fire engine",
     "zug": "train", "zugpfeife": "train whistle", "schiffshorn": "boat whistle",
@@ -35,7 +37,8 @@ GERAEUSCHE: dict[str, str] = {
 LIEDER: dict[str, str] = {
     "funkel": "twinkle", "jingle bells": "jingle bells", "geburtstag": "happy birthday to you",
     "freude": "ode to joy", "holzsoldaten": "parade of the wooden soldiers",
-    "jagdpolka": "hunting polka",
+    "jagdpolka": "hunting polka", "elise": "to alice", "forelle": "die forelle",
+    "peter und der wolf": "peter and the wolf",
 }
 INSTRUMENTE: list[str] = ["klavier", "e-klavier", "orgel", "gitarre", "e-gitarre", "bass", "zupfbass",
                "cello", "posaune", "klarinette", "saxophon", "floete", "holzfloete", "fagott",

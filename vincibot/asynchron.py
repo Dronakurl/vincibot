@@ -16,6 +16,7 @@ Beispiel:
 from __future__ import annotations
 
 import asyncio
+import math
 from collections.abc import AsyncIterator, Callable, Sequence
 from types import TracebackType
 
@@ -202,26 +203,32 @@ class VinciBotAsync:
                      "verhalten", 60)
 
     # ------------------------------------------------------------ Töne und Musik
-    async def geraeusch(self, name: str) -> None:
+    async def geraeusch(self, name: str, warten: bool = True) -> None:
         """Spielt ein Geräusch ab. Mögliche Geräusche: krankenwagen, polizei, feuerwehr, zug,
         zugpfeife, schiffshorn, flugzeug, auto, automotor, magnetbahn"""
-        await self._befehl(f"audio.effect('{waehle(name, GERAEUSCHE, 'das Geräusch')}', True)",
-                     "effekt", 90)
+        await self._befehl(f"audio.effect('{waehle(name, GERAEUSCHE, 'das Geräusch')}', {warten})",
+                     "effekt", 90 if warten else 15)
 
-    async def lied(self, name: str) -> None:
+    async def lied(self, name: str, warten: bool = True) -> None:
         """Spielt ein Lied ab. Mögliche Lieder: funkel, jingle bells, geburtstag, freude,
         holzsoldaten, jagdpolka"""
-        await self._befehl(f"audio.sing('{waehle(name, LIEDER, 'das Lied')}', True)", "lied", 240)
+        await self._befehl(f"audio.sing('{waehle(name, LIEDER, 'das Lied')}', {warten})", "lied",
+                           240 if warten else 15)
 
-    async def sprich(self, text: str) -> None:
+    async def sprich(self, text: str, warten: bool = True) -> None:
         """Der Roboter spricht – aber nur Englisch (Wörter, Zahlen und Punkte)."""
-        await self._befehl(f"audio.say({text_literal(text)}, True)", "sprich", 60)
+        await self._befehl(f"audio.say({text_literal(text)}, {warten})", "sprich", 60 if warten else 15)
 
     async def ton(self, note: str = "c", schlaege: float = 1, oktave: int = 4) -> None:
         """Spielt einen Ton. note: c d e f g a h (h ist das deutsche 'b'); schlaege: Länge;
         oktave: 3 tiefer, 4 normal, 5 höher."""
         grundton = waehle(note, NOTEN, "die Note")
-        frequenz = round(grundton * 2.0 ** (oktave - 4))
+        frequenz = round(grundton * math.pow(2.0, oktave - 4))
+        await self._befehl(f"audio.play_tone({frequenz}, {schlaege})", "note", 60)
+
+    async def ton_hoehe(self, midi_nummer: int, schlaege: float = 1) -> None:
+        """Spielt einen Ton nach MIDI-Notennummer (60 = mittleres C, 69 = Kammerton a)."""
+        frequenz = round(440.0 * math.pow(2.0, (midi_nummer - 69) / 12))
         await self._befehl(f"audio.play_tone({frequenz}, {schlaege})", "note", 60)
 
     async def pause(self, schlaege: float = 1) -> None:
@@ -270,6 +277,11 @@ class VinciBotAsync:
         """Wie laut ist es um den Roboter herum?"""
         return await self._ganzzahl("sensor.loudness()")
 
+    async def taste_gedrueckt(self, taste: str) -> bool | None:
+        """Wird eine Taste des Roboters gerade gedrückt? taste: "dreieck", "quadrat" oder "kreis"."""
+        namen = {"dreieck": "triangle", "quadrat": "square", "kreis": "circular"}
+        return await self._wahrheit(f"button.is_pressed('{waehle(taste, namen, 'die Taste')}')")
+
     async def sieht_farbe(self, farbe: str) -> bool | None:
         """Sieht der Farbsensor unten diese Farbe? Antwort: True oder False.
         Farben: weiss, rot, gelb, gruen, blau, lila, schwarz"""
@@ -300,7 +312,8 @@ class VinciBotAsync:
                            "strecke_tempo", 60)
 
     async def drehe_mit_tempo(self, grad: float, tempo: int = 50, warten: bool = True) -> None:
-        """Dreht um einen Winkel mit einstellbarem Tempo. Positiv = rechts, negativ = links."""
+        """Dreht um einen Winkel mit einstellbarem Tempo. Positiv = links, negativ = rechts
+        (so macht es auch die Scratch-Oberfläche des Herstellers)."""
         await self._befehl(f"motion.move_raw_angle({grad}, {tempo}, {warten})", "winkel_tempo", 60)
 
     async def rad_drehen(self, rad: str, wert: float, einheit: str = "grad", tempo: int = 50, richtung: str = "uhrzeigersinn") -> None:
@@ -372,6 +385,10 @@ class VinciBotAsync:
     async def lautstaerke_aendern(self, aenderung: int) -> None:
         """Macht den Roboter lauter (positive Zahl) oder leiser (negative Zahl)."""
         await self._befehl(f"audio.set_volume(audio.get_volume() + {aenderung})", "lautstaerke")
+
+    async def tempo_aendern(self, aenderung: float) -> None:
+        """Erhöht (positive Zahl) oder senkt (negative Zahl) das Spieltempo."""
+        await self._befehl(f"audio.set_tempo(audio.get_tempo() + {aenderung})", "tempo")
 
     async def aktuelles_tempo(self) -> float | None:
         """Gibt das aktuelle Spieltempo der Musik zurück."""

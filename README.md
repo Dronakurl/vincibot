@@ -25,9 +25,10 @@ with VinciBot() as roboter:
 5. [Alle Befehle im Überblick](#5-alle-befehle-im-überblick)
 6. [Beispielprogramme](#6-beispielprogramme)
 7. [Mehrere Dinge gleichzeitig (async)](#7-mehrere-dinge-gleichzeitig-async)
-8. [Wenn etwas nicht klappt](#8-wenn-etwas-nicht-klappt)
-9. [Wie funktioniert das?](#9-wie-funktioniert-das)
-10. [Für Entwickler](#10-für-entwickler)
+8. [Scratch und Python umwandeln](#8-scratch-und-python-umwandeln)
+9. [Wenn etwas nicht klappt](#9-wenn-etwas-nicht-klappt)
+10. [Wie funktioniert das?](#10-wie-funktioniert-das)
+11. [Für Entwickler](#11-für-entwickler)
 
 ## 1. Was du brauchst
 
@@ -166,7 +167,30 @@ asyncio.run(haupt())
 
 Außerdem gibt es `await roboter.warte_bis(lambda werte: werte["abstand_cm"] < 10)` und `async for werte in roboter.sensorstrom(): ...` für fortlaufende Sensorwerte.
 
-## 8. Wenn etwas nicht klappt
+## 8. Scratch und Python umwandeln
+
+Du kennst die Blockprogrammierung von MatataCode (Scratch)? Dann kannst du Projekte in Python-Programme
+umwandeln und so sehen, wie die Blöcke als Text aussehen – oder umgekehrt:
+
+```bash
+python -m vincibot.scratch projekt.mc       # Scratch  -> projekt.py
+python -m vincibot.scratch programm.py      # Python   -> programm.mc  (in MatataCode über Datei → Load from your computer öffnen)
+```
+
+Aus „when robot start → move forward 10 cm → turn right 90“ wird:
+
+```python
+with VinciBot() as roboter:
+    roboter.vorwaerts(10)
+    roboter.rechts(90)
+```
+
+Was sich nicht umwandeln lässt, meldet der Konverter als **Warnung** – nichts verschwindet stillschweigend.
+Zurück nach Scratch klappt nur bei einfachen Programmen (Befehle, Schleifen, if/else, Variablen, Rechnen).
+Die Tabelle der Blöcke und alle Grenzen stehen in [docs/scratch.md](docs/scratch.md); Beispiele liegen in
+[`projekte/`](projekte/).
+
+## 9. Wenn etwas nicht klappt
 
 | Problem | Lösung |
 |---|---|
@@ -177,11 +201,11 @@ Außerdem gibt es `await roboter.warte_bis(lambda werte: werte["abstand_cm"] < 1
 | Umlaute auf dem Display fehlen | Das Display zeigt nicht alle Sonderzeichen. Schreibe „ae“, „oe“, „ue“. |
 | `sprich(...)` versteht deutsche Wörter nicht | Der Roboter spricht nur Englisch. |
 
-## 9. Wie funktioniert das?
+## 10. Wie funktioniert das?
 
 Der VinciBot ist ein kleiner Computer (ESP32-S3), auf dem MicroPython läuft. Dieses Paket sendet per Bluetooth Low Energy kleine Pakete mit MicroPython-Befehlen wie `motion.move_position("forward", 10, "cm")`. Der Roboter führt sie aus, antwortet und meldet laufend seine Sensorwerte. Das Paketformat wurde aus der offiziellen Web-Oberfläche (vinci.matatastudio.com) abgeleitet und gegen deren Bluetooth-Verkehr geprüft. Details: [docs/protokoll.md](docs/protokoll.md). Die offizielle Beschreibung der Roboter-Befehle liegt in [docs/firmware-api/](docs/firmware-api/).
 
-## 10. Für Entwickler
+## 11. Für Entwickler
 
 ```
 vincibot/
@@ -190,7 +214,9 @@ vincibot/
   _woerter.py      deutsche Namen (Farben, Tänze …) -> Befehle des Roboters
   _verbindung.py   Bluetooth-Verbindung, Antworten, Sensorstrom
   _protokoll.py    Paketformat, Prüfsumme
+  scratch.py       Konverter Scratch (.mc/.sb3) <-> Python
 beispiele/         Beispielprogramme
+projekte/          Scratch-Beispielprojekte und ihre Python-Umwandlung
 docs/              Referenz, Protokoll, Roboter-API
 tests/             Tests (laufen ohne Roboter): pytest
 werkzeuge/         erzeuge_roboter.py (erzeugt roboter.py) und erzeuge_referenz.py (docs/referenz.md)
@@ -207,4 +233,4 @@ Für Befehle, die dieses Paket nicht kennt, gibt es `roboter.roh("<MicroPython-B
 
 ### Teststand
 
-Getestet am echten Roboter (Linux, BlueZ): Fahren, Drehen, Lichter, Display (Text, Bild, Pixel), Töne, Noten, Lied „funkel“, Sprechen, Gefühle, Bewegungen, Tänze, Sensorabfragen und gleichzeitige Befehle. Die Namen aller Geräusche, Tänze, Gefühle und Bewegungen wurden einmal durchgespielt und vom Roboter angenommen. Nicht ausprobiert: die übrigen Lieder (außer „funkel“), `spiele_datei`, Infrarot, Fernbedienung, Farbsensor-Kalibrierung und die Trommel-Namen.
+Getestet am echten Roboter (Linux, BlueZ): Fahren, Drehen, Lichter, Display (Text, Bild, Pixel), Töne, Noten, Lied „funkel“, Sprechen, Gefühle, Bewegungen, Tänze, Sensorabfragen und gleichzeitige Befehle. Die Namen aller Geräusche, Tänze, Gefühle und Bewegungen wurden einmal durchgespielt und vom Roboter angenommen. Der Scratch-Konverter ist mit einem Beispielprojekt und per Rundlauf getestet; ein erzeugtes Scratch-Projekt wurde in der Web-Oberfläche geladen. Nicht ausprobiert: ob der Roboter ein umgewandeltes Programm genauso ausführt wie die Blöcke, die Drehrichtung von `drehe_mit_tempo`, die übrigen Lieder (außer „funkel“), `spiele_datei`, Infrarot, Fernbedienung, Farbsensor-Kalibrierung und die Trommel-Namen.

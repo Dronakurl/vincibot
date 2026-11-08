@@ -110,7 +110,8 @@ class VinciBot:
         return self._laufen(self._roboter.display_richtung(richtung))
 
     def drehe_mit_tempo(self, grad: float, tempo: int = 50, warten: bool = True) -> None:
-        """Dreht um einen Winkel mit einstellbarem Tempo. Positiv = rechts, negativ = links.
+        """Dreht um einen Winkel mit einstellbarem Tempo. Positiv = links, negativ = rechts
+        (so macht es auch die Scratch-Oberfläche des Herstellers).
         """
         return self._laufen(self._roboter.drehe_mit_tempo(grad, tempo, warten))
 
@@ -156,11 +157,11 @@ class VinciBot:
         """
         return self._laufen(self._roboter.gefuehl(name))
 
-    def geraeusch(self, name: str) -> None:
+    def geraeusch(self, name: str, warten: bool = True) -> None:
         """Spielt ein Geräusch ab. Mögliche Geräusche: krankenwagen, polizei, feuerwehr, zug,
         zugpfeife, schiffshorn, flugzeug, auto, automotor, magnetbahn
         """
-        return self._laufen(self._roboter.geraeusch(name))
+        return self._laufen(self._roboter.geraeusch(name, warten))
 
     def helligkeit(self, seite: str = 'links') -> float | None:
         """Wie hell ist es? seite: "links" oder "rechts"; Ergebnis in Prozent.
@@ -217,11 +218,11 @@ class VinciBot:
         """
         return self._laufen(self._roboter.lichter(farben))
 
-    def lied(self, name: str) -> None:
+    def lied(self, name: str, warten: bool = True) -> None:
         """Spielt ein Lied ab. Mögliche Lieder: funkel, jingle bells, geburtstag, freude,
         holzsoldaten, jagdpolka
         """
-        return self._laufen(self._roboter.lied(name))
+        return self._laufen(self._roboter.lied(name, warten))
 
     def linie_erkannt(self, nummer: int, farbe: str = 'schwarz') -> bool | None:
         """Sieht Bodensensor 1-5 gerade "schwarz" oder "weiss"? True oder False.
@@ -307,10 +308,10 @@ class VinciBot:
         """
         return self._laufen(self._roboter.spiele_datei(pfad, warten))
 
-    def sprich(self, text: str) -> None:
+    def sprich(self, text: str, warten: bool = True) -> None:
         """Der Roboter spricht – aber nur Englisch (Wörter, Zahlen und Punkte).
         """
-        return self._laufen(self._roboter.sprich(text))
+        return self._laufen(self._roboter.sprich(text, warten))
 
     def stoppe(self) -> None:
         """Hält den Roboter an.
@@ -329,16 +330,31 @@ class VinciBot:
         """
         return self._laufen(self._roboter.tanze(name))
 
+    def taste_gedrueckt(self, taste: str) -> bool | None:
+        """Wird eine Taste des Roboters gerade gedrückt? taste: "dreieck", "quadrat" oder "kreis".
+        """
+        return self._laufen(self._roboter.taste_gedrueckt(taste))
+
     def tempo(self, geschwindigkeit: int) -> None:
         """Wie schnell gespielt wird (große Zahl = schnell).
         """
         return self._laufen(self._roboter.tempo(geschwindigkeit))
+
+    def tempo_aendern(self, aenderung: float) -> None:
+        """Erhöht (positive Zahl) oder senkt (negative Zahl) das Spieltempo.
+        """
+        return self._laufen(self._roboter.tempo_aendern(aenderung))
 
     def ton(self, note: str = 'c', schlaege: float = 1, oktave: int = 4) -> None:
         """Spielt einen Ton. note: c d e f g a h (h ist das deutsche 'b'); schlaege: Länge;
         oktave: 3 tiefer, 4 normal, 5 höher.
         """
         return self._laufen(self._roboter.ton(note, schlaege, oktave))
+
+    def ton_hoehe(self, midi_nummer: int, schlaege: float = 1) -> None:
+        """Spielt einen Ton nach MIDI-Notennummer (60 = mittleres C, 69 = Kammerton a).
+        """
+        return self._laufen(self._roboter.ton_hoehe(midi_nummer, schlaege))
 
     def ton_stopp(self) -> None:
         """Beendet die Musik oder das Geräusch.

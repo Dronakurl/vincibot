@@ -43,7 +43,8 @@ Negative Zahlen fahren rückwärts. Mit warten=False geht das Programm sofort we
 
 ### `drehe_mit_tempo(grad: 'float', tempo: 'int' = 50, warten: 'bool' = True) -> 'None'`
 
-Dreht um einen Winkel mit einstellbarem Tempo. Positiv = rechts, negativ = links.
+Dreht um einen Winkel mit einstellbarem Tempo. Positiv = links, negativ = rechts
+(so macht es auch die Scratch-Oberfläche des Herstellers).
 
 ### `rad_drehen(rad: 'str', wert: 'float', einheit: 'str' = 'grad', tempo: 'int' = 50, richtung: 'str' = 'uhrzeigersinn') -> 'None'`
 
@@ -151,17 +152,17 @@ sprinten, kreisen, schuetteln
 
 ## Töne und Musik
 
-### `geraeusch(name: 'str') -> 'None'`
+### `geraeusch(name: 'str', warten: 'bool' = True) -> 'None'`
 
 Spielt ein Geräusch ab. Mögliche Geräusche: krankenwagen, polizei, feuerwehr, zug,
 zugpfeife, schiffshorn, flugzeug, auto, automotor, magnetbahn
 
-### `lied(name: 'str') -> 'None'`
+### `lied(name: 'str', warten: 'bool' = True) -> 'None'`
 
 Spielt ein Lied ab. Mögliche Lieder: funkel, jingle bells, geburtstag, freude,
 holzsoldaten, jagdpolka
 
-### `sprich(text: 'str') -> 'None'`
+### `sprich(text: 'str', warten: 'bool' = True) -> 'None'`
 
 Der Roboter spricht – aber nur Englisch (Wörter, Zahlen und Punkte).
 
@@ -169,6 +170,10 @@ Der Roboter spricht – aber nur Englisch (Wörter, Zahlen und Punkte).
 
 Spielt einen Ton. note: c d e f g a h (h ist das deutsche 'b'); schlaege: Länge;
 oktave: 3 tiefer, 4 normal, 5 höher.
+
+### `ton_hoehe(midi_nummer: 'int', schlaege: 'float' = 1) -> 'None'`
+
+Spielt einen Ton nach MIDI-Notennummer (60 = mittleres C, 69 = Kammerton a).
 
 ### `pause(schlaege: 'float' = 1) -> 'None'`
 
@@ -181,6 +186,10 @@ Wählt das Instrument für `ton()`, z. B. "klavier", "gitarre", "floete", "spiel
 ### `tempo(geschwindigkeit: 'int') -> 'None'`
 
 Wie schnell gespielt wird (große Zahl = schnell).
+
+### `tempo_aendern(aenderung: 'float') -> 'None'`
+
+Erhöht (positive Zahl) oder senkt (negative Zahl) das Spieltempo.
 
 ### `aktuelles_tempo() -> 'float | None'`
 
@@ -229,6 +238,10 @@ Wie laut ist es um den Roboter herum?
 
 Sieht der Farbsensor unten diese Farbe? Antwort: True oder False.
 Farben: weiss, rot, gelb, gruen, blau, lila, schwarz
+
+### `taste_gedrueckt(taste: 'str') -> 'bool | None'`
+
+Wird eine Taste des Roboters gerade gedrückt? taste: "dreieck", "quadrat" oder "kreis".
 
 ### `farbwert(kanal: 'str') -> 'int | None'`
 
