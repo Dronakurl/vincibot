@@ -68,6 +68,7 @@ class Verbindung:
                 self._client = None
 
     async def _sende(self, paket):
+        assert self._client is not None, "Nicht verbunden"
         for anfang in range(0, len(paket), PAKETGROESSE):
             await self._client.write_gatt_char(
                 SCHREIB_UUID, paket[anfang:anfang + PAKETGROESSE], response=True)

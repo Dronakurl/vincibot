@@ -22,3 +22,13 @@ def test_entpacken_der_antwort():
 
 def test_text_mit_umlauten():
     assert p.text_literal("Grüße") == "'Gr\\u00fc\\u00dfe'"
+
+
+def test_roboter_py_ist_aktuell():
+    """vincibot/roboter.py muss zu asynchron.py passen (sonst: python werkzeuge/erzeuge_roboter.py)."""
+    import pathlib
+    import sys
+    wurzel = pathlib.Path(__file__).resolve().parent.parent
+    sys.path.insert(0, str(wurzel / "werkzeuge"))
+    from erzeuge_roboter import erzeuge
+    assert (wurzel / "vincibot" / "roboter.py").read_text(encoding="utf-8") == erzeuge()

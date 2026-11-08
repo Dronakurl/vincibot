@@ -185,7 +185,7 @@ Der VinciBot ist ein kleiner Computer (ESP32-S3), auf dem MicroPython läuft. Di
 
 ```
 vincibot/
-  roboter.py       einfache Klasse VinciBot (ohne async), automatisch aus der async-Klasse erzeugt
+  roboter.py       einfache Klasse VinciBot (ohne async), AUTOMATISCH erzeugt aus asynchron.py
   asynchron.py     VinciBotAsync – alle Befehle, async
   _woerter.py      deutsche Namen (Farben, Tänze …) -> Befehle des Roboters
   _verbindung.py   Bluetooth-Verbindung, Antworten, Sensorstrom
@@ -193,12 +193,13 @@ vincibot/
 beispiele/         Beispielprogramme
 docs/              Referenz, Protokoll, Roboter-API
 tests/             Tests (laufen ohne Roboter): pytest
-werkzeuge/         erzeuge_referenz.py erstellt docs/referenz.md aus dem Code
+werkzeuge/         erzeuge_roboter.py (erzeugt roboter.py) und erzeuge_referenz.py (docs/referenz.md)
 ```
 
 ```bash
 pip install -e ".[test]"
 pytest                                  # Tests ohne Roboter
+python werkzeuge/erzeuge_roboter.py      # roboter.py neu erzeugen, nachdem asynchron.py geändert wurde
 python werkzeuge/erzeuge_referenz.py    # Referenz neu erzeugen
 ```
 
