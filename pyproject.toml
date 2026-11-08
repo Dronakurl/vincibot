@@ -7,7 +7,7 @@ name = "vincibot"
 version = "0.2.0"
 description = "VinciBot (MatataStudio) per Bluetooth mit Python steuern – einfach und auf Deutsch"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = ["bleak>=0.22"]
 
 [project.optional-dependencies]
@@ -16,6 +16,9 @@ test = ["pytest"]
 [tool.setuptools]
 packages = ["vincibot"]
 
-[tool.pyright]
+[tool.basedpyright]
 venvPath = "."
 venv = ".venv"
+include = ["vincibot", "beispiele", "tests", "werkzeuge"]
+pythonVersion = "3.10"
+ignore = ["werkzeuge"]

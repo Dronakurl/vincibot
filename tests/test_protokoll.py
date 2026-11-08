@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false, reportAny=false, reportImplicitStringConcatenation=false
 from vincibot import _protokoll as p
 
 
@@ -26,9 +27,12 @@ def test_text_mit_umlauten():
 
 def test_roboter_py_ist_aktuell():
     """vincibot/roboter.py muss zu asynchron.py passen (sonst: python werkzeuge/erzeuge_roboter.py)."""
+    import importlib.util
     import pathlib
-    import sys
     wurzel = pathlib.Path(__file__).resolve().parent.parent
-    sys.path.insert(0, str(wurzel / "werkzeuge"))
-    from erzeuge_roboter import erzeuge
-    assert (wurzel / "vincibot" / "roboter.py").read_text(encoding="utf-8") == erzeuge()
+    spez = importlib.util.spec_from_file_location("erzeuge_roboter",
+                                                  wurzel / "werkzeuge" / "erzeuge_roboter.py")
+    assert spez is not None and spez.loader is not None
+    modul = importlib.util.module_from_spec(spez)
+    spez.loader.exec_module(modul)
+    assert (wurzel / "vincibot" / "roboter.py").read_text(encoding="utf-8") == modul.erzeuge()

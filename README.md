@@ -33,7 +33,7 @@ with VinciBot() as roboter:
 
 - einen **VinciBot** (eingeschaltet, Akku geladen)
 - einen Computer mit **Bluetooth** (Linux getestet; Windows und macOS sollten mit der Bluetooth-Bibliothek `bleak` funktionieren, sind aber nicht getestet)
-- **Python 3.9 oder neuer**
+- **Python 3.10 oder neuer**
 
 ## 2. Installieren
 

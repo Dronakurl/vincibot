@@ -10,10 +10,19 @@ KOPF = '''"""Die einfache Schnittstelle zum VinciBot – gemacht zum Programmier
 ACHTUNG: Diese Datei wird automatisch erzeugt (python werkzeuge/erzeuge_roboter.py).
 Änderungen bitte in asynchron.py machen und die Datei neu erzeugen.
 """
+from __future__ import annotations
+
 import asyncio
 import threading
+from collections.abc import Callable, Coroutine, Sequence
+from types import TracebackType
+from typing import TypeVar
 
+from ._protokoll import Sensorwerte
+from ._woerter import Farbe
 from .asynchron import VinciBotAsync
+
+_T = TypeVar("_T")
 
 
 class VinciBot:
@@ -33,40 +42,42 @@ class VinciBot:
             roboter.vorwaerts(10)
     """
 
-    def __init__(self, adresse=None, suchdauer=15):
+    def __init__(self, adresse: str | None = None, suchdauer: float = 15) -> None:
         """Verbindet sich mit dem Roboter.
 
         adresse:   Nur nötig, wenn mehrere Roboter in der Nähe sind (z. B. "AA:BB:CC:DD:EE:FF").
         suchdauer: Wie viele Sekunden nach dem Roboter gesucht wird.
         """
-        self._schleife = asyncio.new_event_loop()
-        self._faden = threading.Thread(target=self._schleife.run_forever, daemon=True)
+        self._schleife: asyncio.AbstractEventLoop = asyncio.new_event_loop()
+        self._faden: threading.Thread = threading.Thread(target=self._schleife.run_forever,
+                                                         daemon=True)
         self._faden.start()
-        self._roboter = VinciBotAsync(adresse=adresse, suchdauer=suchdauer)
+        self._roboter: VinciBotAsync = VinciBotAsync(adresse=adresse, suchdauer=suchdauer)
         try:
             self._laufen(self._roboter.verbinden())
         except BaseException:
             self._beende_schleife()
             raise
 
-    def _laufen(self, aufgabe):
+    def _laufen(self, aufgabe: Coroutine[object, object, _T]) -> _T:
         return asyncio.run_coroutine_threadsafe(aufgabe, self._schleife).result()
 
-    def _beende_schleife(self):
-        self._schleife.call_soon_threadsafe(self._schleife.stop)
+    def _beende_schleife(self) -> None:
+        _ = self._schleife.call_soon_threadsafe(self._schleife.stop)
         self._faden.join(timeout=2)
 
-    def trennen(self):
+    def trennen(self) -> None:
         """Beendet die Verbindung zum Roboter."""
         try:
             self._laufen(self._roboter.trennen())
         finally:
             self._beende_schleife()
 
-    def __enter__(self):
+    def __enter__(self) -> "VinciBot":
         return self
 
-    def __exit__(self, *_):
+    def __exit__(self, typ: type[BaseException] | None, wert: BaseException | None,
+                 spur: TracebackType | None) -> None:
         self.trennen()
 '''
 
@@ -76,14 +87,15 @@ def methode(name, funktion):
     signatur = ["self"]
     aufruf = []
     for par in parameter:
-        if par.default is inspect.Parameter.empty:
-            signatur.append(par.name)
-        else:
-            signatur.append(f"{par.name}={par.default!r}")
+        teil = f"{par.name}: {par.annotation}"
+        if par.default is not inspect.Parameter.empty:
+            teil += f" = {par.default!r}"
+        signatur.append(teil)
         aufruf.append(par.name)
+    rueckgabe = inspect.signature(funktion).return_annotation
     doc = inspect.cleandoc(funktion.__doc__ or "")
     doc = "\n".join(("        " + z) if z else "" for z in doc.splitlines())
-    return (f"    def {name}({', '.join(signatur)}):\n"
+    return (f"    def {name}({', '.join(signatur)}) -> {rueckgabe}:\n"
             f'        """{doc.strip()}\n        """\n'
             f"        return self._laufen(self._roboter.{name}({', '.join(aufruf)}))\n")
 

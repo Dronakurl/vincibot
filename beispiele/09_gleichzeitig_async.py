@@ -6,7 +6,7 @@ from vincibot import VinciBotAsync
 
 async def haupt():
     async with VinciBotAsync() as roboter:
-        await asyncio.gather(
+        _ = await asyncio.gather(
             roboter.vorwaerts(20),
             roboter.lichter(["rot", "gelb", "gruen", "blau", "lila", "weiss"]),
         )

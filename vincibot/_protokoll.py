@@ -1,7 +1,21 @@
 """Internes: Aufbau der Bluetooth-Pakete (für Anfänger nicht nötig)."""
+from collections.abc import Iterable
+from typing import TypedDict
+
+class Sensorwerte(TypedDict):
+    """Die aktuellen Messwerte des Roboters."""
+    hell_links: int
+    hell_rechts: int
+    linie: list[int]
+    geraeusch: int
+    farbe: tuple[int, int, int]
+    abstand_cm: float
+    lautstaerke: int
+    tempo: int
+
 
 # Sequenznummern: Der Bot nummeriert Befehlsarten durch und antwortet mit derselben Nummer.
-SEQUENZ = {
+SEQUENZ: dict[str, int] = {
     "strecke": 0, "winkel": 1, "fahrt_start": 2, "fahrt_stopp": 3,
     "strecke_tempo": 4, "winkel_tempo": 5, "motor_lauf": 6, "motor_tempo": 8, "motor_stopp": 9,
     "tanz": 10, "emotion": 11, "verhalten": 12, "bild": 16, "text": 17, "anzeige_aus": 18,
@@ -13,10 +27,10 @@ SEQUENZ = {
 }
 
 # Begrüßung nach dem Verbinden (wie in der offiziellen Web-Oberfläche)
-BEGRUESSUNG = [[126, 2, 2, 0, 0], [1, 1]]
+BEGRUESSUNG: list[list[int]] = [[126, 2, 2, 0, 0], [1, 1]]
 
 
-def pruefsumme(daten, startwert=0xFFFF):
+def pruefsumme(daten: Iterable[int], startwert: int = 0xFFFF) -> int:
     ergebnis = startwert
     for byte in daten:
         ergebnis = ((ergebnis >> 8) | (ergebnis << 8)) & 0xFFFF
@@ -27,7 +41,7 @@ def pruefsumme(daten, startwert=0xFFFF):
     return ergebnis
 
 
-def _maskiere(byte):
+def _maskiere(byte: int) -> list[int]:
     if byte == 0xFE:
         return [0xFD, 0xDE]
     if byte == 0xFD:
@@ -35,25 +49,25 @@ def _maskiere(byte):
     return [byte]
 
 
-def baue_paket(nutzdaten):
+def baue_paket(nutzdaten: list[int]) -> bytes:
     """Startbyte 0xFE, Länge, Nutzdaten, Prüfsumme (Sonderbytes werden maskiert)."""
     laenge = len(nutzdaten) + 2
     summe = pruefsumme(nutzdaten, pruefsumme([laenge]))
-    paket = [0xFE] + _maskiere(laenge)
+    paket: list[int] = [0xFE] + _maskiere(laenge)
     for byte in nutzdaten:
         paket += _maskiere(byte)
     paket += _maskiere(summe >> 8) + _maskiere(summe & 0xFF)
     return bytes(paket)
 
 
-def baue_befehlspaket(code, sequenz):
+def baue_befehlspaket(code: str, sequenz: int) -> bytes:
     """Paket für einen Python-Befehl, den der Bot ausführt."""
     return baue_paket([0x70, 0x00, sequenz] + list(code.encode("ascii", "replace")))
 
 
-def text_literal(text):
+def text_literal(text: object) -> str:
     """Macht aus beliebigem Text ein Python-Textstück für den Bot (Umlaute als \\uXXXX)."""
-    teile = []
+    teile: list[str] = []
     for zeichen in str(text):
         if zeichen in "\\'\"":
             teile.append("\\" + zeichen)
@@ -64,16 +78,18 @@ def text_literal(text):
     return "'" + "".join(teile) + "'"
 
 
-def entpacke(puffer):
+def entpacke(puffer: list[int]) -> list[list[int]]:
     """Holt vollständige Pakete aus einem Byte-Puffer. Gibt (liste_von_nutzdaten) zurück
     und entfernt Verarbeitetes aus dem Puffer."""
-    pakete = []
+    pakete: list[list[int]] = []
     while True:
         if 0xFE not in puffer:
             puffer.clear()
             return pakete
         del puffer[:puffer.index(0xFE)]
-        roh, i, ende = [], 1, None
+        roh: list[int] = []
+        i = 1
+        ende = None
         while i < len(puffer):
             b = puffer[i]
             if b == 0xFD and i + 1 < len(puffer):
