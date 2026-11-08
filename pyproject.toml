@@ -9,7 +9,20 @@ version = "0.2.0"
 description = "VinciBot (MatataStudio) per Bluetooth mit Python steuern – einfach und auf Deutsch"
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [{ name = "Dronakurl" }]
+keywords = ["vincibot", "matatastudio", "roboter", "bluetooth", "scratch", "lernen"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Natural Language :: German",
+    "Intended Audience :: Education",
+    "Topic :: Education",
+    "Typing :: Typed",
+]
 dependencies = ["bleak>=0.22"]
+
+[project.urls]
+Homepage = "https://github.com/Dronakurl/vincibot"
+Issues = "https://github.com/Dronakurl/vincibot/issues"
 
 [project.scripts]
 vincibot-konverter = "vincibot.scratch:haupt"
@@ -19,6 +32,9 @@ test = ["pytest"]
 
 [tool.setuptools]
 packages = ["vincibot"]
+
+[tool.setuptools.package-data]
+vincibot = ["py.typed"]
 
 [tool.basedpyright]
 venvPath = "."
