@@ -1,9 +1,12 @@
 """Spiele eine kleine Melodie: "Alle meine Entchen" (c d e f g g)."""
 from vincibot import VinciBot
 
-with VinciBot() as roboter:
-    roboter.instrument("klavier")
-    for note in ["c", "d", "e", "f"]:
-        roboter.ton(note, 1)
-    roboter.ton("g", 2)
-    roboter.ton("g", 2)
+roboter = VinciBot()
+roboter.instrument("klavier")
+roboter.ton("c", 1)
+roboter.ton("d", 1)
+roboter.ton("e", 1)
+roboter.ton("f", 1)
+roboter.ton("g", 2)
+roboter.ton("g", 2)
+roboter.trennen()

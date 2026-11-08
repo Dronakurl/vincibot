@@ -22,8 +22,11 @@ from types import TracebackType
 
 from ._protokoll import SEQUENZ, Sensorwerte, text_literal
 from ._verbindung import Antwort, Verbindung
+from ._typen import (Bewegung, Bodensensor, DisplayRichtung, Drehrichtung, Einheit, Farbe, Farbkanal,
+                     Fernbedienungstaste, FahrRichtung, Gefuehl, Geraeusch, Instrument, Lied, Linienfarbe,
+                     Note, Position, Rad, Seite, SensorFarbe, Tanz, Taste)
 from ._woerter import (BEWEGUNGEN, FARBEN_SENSOR, GEFUEHLE, GERAEUSCHE, INSTRUMENTE, LIEDER,
-                       NOTEN, POSITIONEN, TAENZE, Farbe, RoboterFehler, farbe_umrechnen, waehle)
+                       NOTEN, POSITIONEN, TAENZE, RoboterFehler, farbe_umrechnen, waehle)
 
 
 class VinciBotAsync:
@@ -102,7 +105,7 @@ class VinciBotAsync:
         """Dreht sich auf der Stelle nach rechts."""
         await self._befehl(f'motion.move_angle("right", {grad}, "degrees")', "winkel", 30)
 
-    async def fahre(self, richtung: str = "vorwaerts", tempo: int = 50) -> None:
+    async def fahre(self, richtung: FahrRichtung = "vorwaerts", tempo: int = 50) -> None:
         """Fährt immer weiter, bis du `stoppe()` aufrufst.
 
         richtung: "vorwaerts", "rueckwaerts", "links" oder "rechts"
@@ -128,7 +131,7 @@ class VinciBotAsync:
         r, g, b = farbe_umrechnen(farbe)
         await self._befehl(f"leds.show_all({r}, {g}, {b})", "led_alle")
 
-    async def licht_einzeln(self, position: str, farbe: Farbe) -> None:
+    async def licht_einzeln(self, position: Position, farbe: Farbe) -> None:
         """Ein einzelnes Licht in einer Farbe, z. B. licht_einzeln("links oben", "rot").
 
         Positionen (von vorne gesehen):
@@ -141,7 +144,7 @@ class VinciBotAsync:
         r, g, b = farbe_umrechnen(farbe)
         await self._befehl(f"leds.show_single({nummer}, {r}, {g}, {b})", "led_einzeln")
 
-    async def lichter(self, farben: Mapping[str, Farbe]) -> None:
+    async def lichter(self, farben: Mapping[Position, Farbe]) -> None:
         """Mehrere Lichter auf einmal, jedes mit eigener Farbe. Nicht genannte Lichter gehen aus.
 
             roboter.lichter({
@@ -197,7 +200,7 @@ class VinciBotAsync:
         await self._befehl("led_matrix.clear()", "anzeige_aus")
 
     # ------------------------------------------------------------ Gefühle, Tänze, Bewegungen
-    async def gefuehl(self, name: str) -> None:
+    async def gefuehl(self, name: Gefuehl) -> None:
         """Der Roboter zeigt ein Gefühl (Gesicht, Ton und Bewegung).
 
         Mögliche Gefühle: froehlich, wuetend, traurig, ueberrascht, aengstlich, angeekelt,
@@ -205,25 +208,25 @@ class VinciBotAsync:
         """
         await self._befehl(f"action.emotion('{waehle(name, GEFUEHLE, 'das Gefühl')}')", "emotion", 40)
 
-    async def tanze(self, name: str) -> None:
+    async def tanze(self, name: Tanz) -> None:
         """Der Roboter tanzt. Mögliche Tänze: tango, walzer, steppen, samba, polonaise, jazz,
         rock, polka"""
         await self._befehl(f"action.dance('{waehle(name, TAENZE, 'den Tanz')}')", "tanz", 90)
 
-    async def bewege_dich(self, name: str) -> None:
+    async def bewege_dich(self, name: Bewegung) -> None:
         """Der Roboter macht eine Bewegung. Mögliche Bewegungen: umschauen, verletzt,
         sprinten, kreisen, schuetteln"""
         await self._befehl(f"action.behavior('{waehle(name, BEWEGUNGEN, 'die Bewegung')}')",
                      "verhalten", 60)
 
     # ------------------------------------------------------------ Töne und Musik
-    async def geraeusch(self, name: str, warten: bool = True) -> None:
+    async def geraeusch(self, name: Geraeusch, warten: bool = True) -> None:
         """Spielt ein Geräusch ab. Mögliche Geräusche: krankenwagen, polizei, feuerwehr, zug,
         zugpfeife, schiffshorn, flugzeug, auto, automotor, magnetbahn"""
         await self._befehl(f"audio.effect('{waehle(name, GERAEUSCHE, 'das Geräusch')}', {warten})",
                      "effekt", 90 if warten else 15)
 
-    async def lied(self, name: str, warten: bool = True) -> None:
+    async def lied(self, name: Lied, warten: bool = True) -> None:
         """Spielt ein Lied ab. Mögliche Lieder: funkel, jingle bells, geburtstag, freude,
         holzsoldaten, jagdpolka"""
         await self._befehl(f"audio.sing('{waehle(name, LIEDER, 'das Lied')}', {warten})", "lied",
@@ -233,7 +236,7 @@ class VinciBotAsync:
         """Der Roboter spricht – aber nur Englisch (Wörter, Zahlen und Punkte)."""
         await self._befehl(f"audio.say({text_literal(text)}, {warten})", "sprich", 60 if warten else 15)
 
-    async def ton(self, note: str = "c", schlaege: float = 1, oktave: int = 4) -> None:
+    async def ton(self, note: Note = "c", schlaege: float = 1, oktave: int = 4) -> None:
         """Spielt einen Ton. note: c d e f g a h (h ist das deutsche 'b'); schlaege: Länge;
         oktave: 3 tiefer, 4 normal, 5 höher."""
         grundton = waehle(note, NOTEN, "die Note")
@@ -249,7 +252,7 @@ class VinciBotAsync:
         """Eine Pause in der Musik."""
         await self._befehl(f"audio.rest({schlaege})", "pause", 60)
 
-    async def instrument(self, name: str) -> None:
+    async def instrument(self, name: Instrument) -> None:
         """Wählt das Instrument für `ton()`, z. B. "klavier", "gitarre", "floete", "spieluhr"."""
         schluessel = str(name).lower().strip()
         if schluessel not in INSTRUMENTE:
@@ -276,12 +279,12 @@ class VinciBotAsync:
         """Wie weit ist das nächste Hindernis vorne entfernt? (in Zentimetern)"""
         return await self._zahl("sensor.get_obstacle_avoidance_value()")
 
-    async def helligkeit(self, seite: str = "links") -> float | None:
+    async def helligkeit(self, seite: Seite = "links") -> float | None:
         """Wie hell ist es? seite: "links" oder "rechts"; Ergebnis in Prozent."""
         name = waehle(seite, {"links": "left", "rechts": "right"}, "die Seite")
         return await self._zahl(f"sensor.get_brightness('{name}')")
 
-    async def untergrund(self, nummer: int) -> int | None:
+    async def untergrund(self, nummer: Bodensensor) -> int | None:
         """Wie hell ist der Boden unter dem Sensor 1 bis 5? 0 = dunkel (Linie), 100 = hell."""
         if not 1 <= nummer <= 5:
             raise RoboterFehler("Die Bodensensoren sind von 1 bis 5 nummeriert.")
@@ -291,12 +294,12 @@ class VinciBotAsync:
         """Wie laut ist es um den Roboter herum?"""
         return await self._ganzzahl("sensor.loudness()")
 
-    async def taste_gedrueckt(self, taste: str) -> bool | None:
+    async def taste_gedrueckt(self, taste: Taste) -> bool | None:
         """Wird eine Taste des Roboters gerade gedrückt? taste: "dreieck", "quadrat" oder "kreis"."""
         namen = {"dreieck": "triangle", "quadrat": "square", "kreis": "circular"}
         return await self._wahrheit(f"button.is_pressed('{waehle(taste, namen, 'die Taste')}')")
 
-    async def sieht_farbe(self, farbe: str) -> bool | None:
+    async def sieht_farbe(self, farbe: SensorFarbe) -> bool | None:
         """Sieht der Farbsensor unten diese Farbe? Antwort: True oder False.
         Farben: weiss, rot, gelb, gruen, blau, lila, schwarz"""
         return await self._wahrheit(f"sensor.is_color_detected('{waehle(farbe, FARBEN_SENSOR, 'die Farbe')}')")
@@ -330,7 +333,7 @@ class VinciBotAsync:
         (so macht es auch die Scratch-Oberfläche des Herstellers)."""
         await self._befehl(f"motion.move_raw_angle({grad}, {tempo}, {warten})", "winkel_tempo", 60)
 
-    async def rad_drehen(self, rad: str, wert: float, einheit: str = "grad", tempo: int = 50, richtung: str = "uhrzeigersinn") -> None:
+    async def rad_drehen(self, rad: Rad, wert: float, einheit: Einheit = "grad", tempo: int = 50, richtung: Drehrichtung = "uhrzeigersinn") -> None:
         """Lässt ein Rad drehen. rad: "links", "rechts" oder "beide";
         einheit: "grad", "umdrehungen" oder "sekunden"; richtung: "uhrzeigersinn" oder "gegen"."""
         raeder = {"links": "L", "rechts": "R", "beide": "L+R"}
@@ -343,7 +346,7 @@ class VinciBotAsync:
             f'motion.motor_run("{rad_name}", {wert}, "{einheit_name}", {tempo}, "{richtung_name}")',
             "motor_lauf", 60)
 
-    async def rad_stopp(self, rad: str = "beide") -> None:
+    async def rad_stopp(self, rad: Rad = "beide") -> None:
         """Hält ein Rad an ("links", "rechts" oder "beide")."""
         raeder = {"links": "L", "rechts": "R", "beide": "L+R"}
         await self._befehl(f'motion.stop("{waehle(rad, raeder, "das Rad")}")', "motor_stopp")
@@ -375,13 +378,13 @@ class VinciBotAsync:
         return [sum(1 << i for i, z in enumerate(h) if z == "#")
                 for zeile in zeilen for h in (zeile[:8], zeile[8:])]
 
-    async def display_richtung(self, richtung: str) -> None:
+    async def display_richtung(self, richtung: DisplayRichtung) -> None:
         """In welche Richtung die Laufschrift wandert: "hoch", "runter", "links", "rechts"."""
         namen = {"hoch": "up", "runter": "down", "links": "left", "rechts": "right"}
         await self._befehl(f'led_matrix.set_orientation("{waehle(richtung, namen, "die Richtung")}")',
                            "ausrichtung")
 
-    async def display_drehen(self, richtung: str = "uhrzeigersinn") -> None:
+    async def display_drehen(self, richtung: Drehrichtung = "uhrzeigersinn") -> None:
         """Dreht das Bild auf dem Display: "uhrzeigersinn" oder "gegen"."""
         namen = {"uhrzeigersinn": "clockwise", "gegen": "counterclockwise"}
         await self._befehl(f'led_matrix.screen_rotate("{waehle(richtung, namen, "die Richtung")}")',
@@ -410,12 +413,12 @@ class VinciBotAsync:
         return await self._zahl("audio.get_tempo()")
 
     # ------------------------------------------------------------ Erweitert: Sensoren
-    async def linie_erkannt(self, nummer: int, farbe: str = "schwarz") -> bool | None:
+    async def linie_erkannt(self, nummer: Bodensensor, farbe: Linienfarbe = "schwarz") -> bool | None:
         """Sieht Bodensensor 1-5 gerade "schwarz" oder "weiss"? True oder False."""
         wert = waehle(farbe, {"weiss": 0, "weiß": 0, "schwarz": 1}, "die Farbe")
         return await self._wahrheit(f"sensor.is_line_following_sensor_detected({nummer}, {wert})")
 
-    async def farbwert(self, kanal: str) -> int | None:
+    async def farbwert(self, kanal: Farbkanal) -> int | None:
         """Wie viel Rot, Grün oder Blau sieht der Farbsensor? kanal: "rot", "gruen", "blau"."""
         namen = {"rot": "red", "gruen": "green", "grün": "green", "blau": "blue"}
         return await self._ganzzahl(f"sensor.get_color_channel('{waehle(kanal, namen, 'den Kanal')}')")
@@ -428,7 +431,7 @@ class VinciBotAsync:
         """Wurde genau diese Infrarot-Nachricht empfangen? True oder False."""
         return await self._wahrheit(f"sensor.is_ir_message_received({text_literal(text)})")
 
-    async def fernbedienung(self, taste: str) -> bool | None:
+    async def fernbedienung(self, taste: Fernbedienungstaste) -> bool | None:
         """Wurde diese Taste der Infrarot-Fernbedienung gedrückt? Tasten: volume, mode, speed,
         forward, backward, left, right, play, dance, led, music, 1, 2, 3"""
         return await self._wahrheit(f"sensor.is_ir_code_received('{taste}')")

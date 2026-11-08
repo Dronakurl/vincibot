@@ -21,7 +21,9 @@ from types import TracebackType
 from typing import TypeVar
 
 from ._protokoll import Sensorwerte
-from ._woerter import Farbe
+from ._typen import (Bewegung, Bodensensor, DisplayRichtung, Drehrichtung, Einheit, Farbe, Farbkanal,
+                     Fernbedienungstaste, FahrRichtung, Gefuehl, Geraeusch, Instrument, Lied, Linienfarbe,
+                     Note, Position, Rad, Seite, SensorFarbe, Tanz, Taste)
 from .asynchron import VinciBotAsync
 
 _T = TypeVar("_T")

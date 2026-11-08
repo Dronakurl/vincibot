@@ -21,7 +21,7 @@ Dreht sich auf der Stelle nach links.
 
 Dreht sich auf der Stelle nach rechts.
 
-### `fahre(richtung: 'str' = 'vorwaerts', tempo: 'int' = 50) -> 'None'`
+### `fahre(richtung: 'FahrRichtung' = 'vorwaerts', tempo: 'int' = 50) -> 'None'`
 
 Fährt immer weiter, bis du `stoppe()` aufrufst.
 
@@ -46,12 +46,12 @@ Negative Zahlen fahren rückwärts. Mit warten=False geht das Programm sofort we
 Dreht um einen Winkel mit einstellbarem Tempo. Positiv = links, negativ = rechts
 (so macht es auch die Scratch-Oberfläche des Herstellers).
 
-### `rad_drehen(rad: 'str', wert: 'float', einheit: 'str' = 'grad', tempo: 'int' = 50, richtung: 'str' = 'uhrzeigersinn') -> 'None'`
+### `rad_drehen(rad: 'Rad', wert: 'float', einheit: 'Einheit' = 'grad', tempo: 'int' = 50, richtung: 'Drehrichtung' = 'uhrzeigersinn') -> 'None'`
 
 Lässt ein Rad drehen. rad: "links", "rechts" oder "beide";
 einheit: "grad", "umdrehungen" oder "sekunden"; richtung: "uhrzeigersinn" oder "gegen".
 
-### `rad_stopp(rad: 'str' = 'beide') -> 'None'`
+### `rad_stopp(rad: 'Rad' = 'beide') -> 'None'`
 
 Hält ein Rad an ("links", "rechts" oder "beide").
 
@@ -73,7 +73,7 @@ Setzt Raddurchmesser, Radabstand usw. auf die Werkseinstellung zurück.
 
 Alle sechs Lichter in einer Farbe, z. B. licht("rot") oder licht((255, 0, 128)).
 
-### `licht_einzeln(position: 'str', farbe: 'Farbe') -> 'None'`
+### `licht_einzeln(position: 'Position', farbe: 'Farbe') -> 'None'`
 
 Ein einzelnes Licht in einer Farbe, z. B. licht_einzeln("links oben", "rot").
 
@@ -83,7 +83,7 @@ Positionen (von vorne gesehen):
     links mitte    rechts mitte
     links unten    rechts unten
 
-### `lichter(farben: 'Mapping[str, Farbe]') -> 'None'`
+### `lichter(farben: 'Mapping[Position, Farbe]') -> 'None'`
 
 Mehrere Lichter auf einmal, jedes mit eigener Farbe. Nicht genannte Lichter gehen aus.
 
@@ -132,11 +132,11 @@ Lässt einen einzelnen Punkt leuchten (spalte 0-15, zeile 0-7, helligkeit 0-100)
 
 Stellt die Helligkeit des Displays ein (0 bis 100).
 
-### `display_richtung(richtung: 'str') -> 'None'`
+### `display_richtung(richtung: 'DisplayRichtung') -> 'None'`
 
 In welche Richtung die Laufschrift wandert: "hoch", "runter", "links", "rechts".
 
-### `display_drehen(richtung: 'str' = 'uhrzeigersinn') -> 'None'`
+### `display_drehen(richtung: 'Drehrichtung' = 'uhrzeigersinn') -> 'None'`
 
 Dreht das Bild auf dem Display: "uhrzeigersinn" oder "gegen".
 
@@ -146,31 +146,31 @@ Löscht das Display.
 
 ## Gefühle, Tänze, Bewegungen
 
-### `gefuehl(name: 'str') -> 'None'`
+### `gefuehl(name: 'Gefuehl') -> 'None'`
 
 Der Roboter zeigt ein Gefühl (Gesicht, Ton und Bewegung).
 
 Mögliche Gefühle: froehlich, wuetend, traurig, ueberrascht, aengstlich, angeekelt,
 begeistert, schwindelig, muede, schlaefrig, wach, stolz
 
-### `tanze(name: 'str') -> 'None'`
+### `tanze(name: 'Tanz') -> 'None'`
 
 Der Roboter tanzt. Mögliche Tänze: tango, walzer, steppen, samba, polonaise, jazz,
 rock, polka
 
-### `bewege_dich(name: 'str') -> 'None'`
+### `bewege_dich(name: 'Bewegung') -> 'None'`
 
 Der Roboter macht eine Bewegung. Mögliche Bewegungen: umschauen, verletzt,
 sprinten, kreisen, schuetteln
 
 ## Töne und Musik
 
-### `geraeusch(name: 'str', warten: 'bool' = True) -> 'None'`
+### `geraeusch(name: 'Geraeusch', warten: 'bool' = True) -> 'None'`
 
 Spielt ein Geräusch ab. Mögliche Geräusche: krankenwagen, polizei, feuerwehr, zug,
 zugpfeife, schiffshorn, flugzeug, auto, automotor, magnetbahn
 
-### `lied(name: 'str', warten: 'bool' = True) -> 'None'`
+### `lied(name: 'Lied', warten: 'bool' = True) -> 'None'`
 
 Spielt ein Lied ab. Mögliche Lieder: funkel, jingle bells, geburtstag, freude,
 holzsoldaten, jagdpolka
@@ -179,7 +179,7 @@ holzsoldaten, jagdpolka
 
 Der Roboter spricht – aber nur Englisch (Wörter, Zahlen und Punkte).
 
-### `ton(note: 'str' = 'c', schlaege: 'float' = 1, oktave: 'int' = 4) -> 'None'`
+### `ton(note: 'Note' = 'c', schlaege: 'float' = 1, oktave: 'int' = 4) -> 'None'`
 
 Spielt einen Ton. note: c d e f g a h (h ist das deutsche 'b'); schlaege: Länge;
 oktave: 3 tiefer, 4 normal, 5 höher.
@@ -192,7 +192,7 @@ Spielt einen Ton nach MIDI-Notennummer (60 = mittleres C, 69 = Kammerton a).
 
 Eine Pause in der Musik.
 
-### `instrument(name: 'str') -> 'None'`
+### `instrument(name: 'Instrument') -> 'None'`
 
 Wählt das Instrument für `ton()`, z. B. "klavier", "gitarre", "floete", "spieluhr".
 
@@ -235,11 +235,11 @@ Beendet die Musik oder das Geräusch.
 
 Wie weit ist das nächste Hindernis vorne entfernt? (in Zentimetern)
 
-### `helligkeit(seite: 'str' = 'links') -> 'float | None'`
+### `helligkeit(seite: 'Seite' = 'links') -> 'float | None'`
 
 Wie hell ist es? seite: "links" oder "rechts"; Ergebnis in Prozent.
 
-### `untergrund(nummer: 'int') -> 'int | None'`
+### `untergrund(nummer: 'Bodensensor') -> 'int | None'`
 
 Wie hell ist der Boden unter dem Sensor 1 bis 5? 0 = dunkel (Linie), 100 = hell.
 
@@ -247,16 +247,16 @@ Wie hell ist der Boden unter dem Sensor 1 bis 5? 0 = dunkel (Linie), 100 = hell.
 
 Wie laut ist es um den Roboter herum?
 
-### `sieht_farbe(farbe: 'str') -> 'bool | None'`
+### `sieht_farbe(farbe: 'SensorFarbe') -> 'bool | None'`
 
 Sieht der Farbsensor unten diese Farbe? Antwort: True oder False.
 Farben: weiss, rot, gelb, gruen, blau, lila, schwarz
 
-### `taste_gedrueckt(taste: 'str') -> 'bool | None'`
+### `taste_gedrueckt(taste: 'Taste') -> 'bool | None'`
 
 Wird eine Taste des Roboters gerade gedrückt? taste: "dreieck", "quadrat" oder "kreis".
 
-### `farbwert(kanal: 'str') -> 'int | None'`
+### `farbwert(kanal: 'Farbkanal') -> 'int | None'`
 
 Wie viel Rot, Grün oder Blau sieht der Farbsensor? kanal: "rot", "gruen", "blau".
 
@@ -264,7 +264,7 @@ Wie viel Rot, Grün oder Blau sieht der Farbsensor? kanal: "rot", "gruen", "blau
 
 Ist ein Hindernis näher als die angegebene Entfernung? True oder False.
 
-### `linie_erkannt(nummer: 'int', farbe: 'str' = 'schwarz') -> 'bool | None'`
+### `linie_erkannt(nummer: 'Bodensensor', farbe: 'Linienfarbe' = 'schwarz') -> 'bool | None'`
 
 Sieht Bodensensor 1-5 gerade "schwarz" oder "weiss"? True oder False.
 
@@ -290,7 +290,7 @@ Die zuletzt empfangene Infrarot-Nachricht (oder leer).
 
 Wurde genau diese Infrarot-Nachricht empfangen? True oder False.
 
-### `fernbedienung(taste: 'str') -> 'bool | None'`
+### `fernbedienung(taste: 'Fernbedienungstaste') -> 'bool | None'`
 
 Wurde diese Taste der Infrarot-Fernbedienung gedrückt? Tasten: volume, mode, speed,
 forward, backward, left, right, play, dance, led, music, 1, 2, 3

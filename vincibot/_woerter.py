@@ -2,7 +2,8 @@
 from collections.abc import Mapping
 from typing import TypeVar
 
-Farbe = str | tuple[int, int, int]
+from ._typen import Farbe
+
 _T = TypeVar("_T")
 
 # ---------------------------------------------------------------- Wörterbücher (Deutsch -> Roboter)

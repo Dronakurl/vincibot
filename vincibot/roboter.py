@@ -14,7 +14,9 @@ from types import TracebackType
 from typing import TypeVar
 
 from ._protokoll import Sensorwerte
-from ._woerter import Farbe
+from ._typen import (Bewegung, Bodensensor, DisplayRichtung, Drehrichtung, Einheit, Farbe, Farbkanal,
+                     Fernbedienungstaste, FahrRichtung, Gefuehl, Geraeusch, Instrument, Lied, Linienfarbe,
+                     Note, Position, Rad, Seite, SensorFarbe, Tanz, Taste)
 from .asynchron import VinciBotAsync
 
 _T = TypeVar("_T")
@@ -97,7 +99,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.aktuelles_tempo())
 
-    def bewege_dich(self, name: str) -> None:
+    def bewege_dich(self, name: Bewegung) -> None:
         """Der Roboter macht eine Bewegung. Mögliche Bewegungen: umschauen, verletzt,
         sprinten, kreisen, schuetteln
         """
@@ -108,7 +110,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.display_aus())
 
-    def display_drehen(self, richtung: str = 'uhrzeigersinn') -> None:
+    def display_drehen(self, richtung: Drehrichtung = 'uhrzeigersinn') -> None:
         """Dreht das Bild auf dem Display: "uhrzeigersinn" oder "gegen".
         """
         return self._laufen(self._roboter.display_drehen(richtung))
@@ -118,7 +120,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.display_helligkeit(prozent))
 
-    def display_richtung(self, richtung: str) -> None:
+    def display_richtung(self, richtung: DisplayRichtung) -> None:
         """In welche Richtung die Laufschrift wandert: "hoch", "runter", "links", "rechts".
         """
         return self._laufen(self._roboter.display_richtung(richtung))
@@ -139,7 +141,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.fahr_einstellungen_zuruecksetzen())
 
-    def fahre(self, richtung: str = 'vorwaerts', tempo: int = 50) -> None:
+    def fahre(self, richtung: FahrRichtung = 'vorwaerts', tempo: int = 50) -> None:
         """Fährt immer weiter, bis du `stoppe()` aufrufst.
 
         richtung: "vorwaerts", "rueckwaerts", "links" oder "rechts"
@@ -152,12 +154,12 @@ class VinciBot:
         """
         return self._laufen(self._roboter.farbsensor_kalibrieren())
 
-    def farbwert(self, kanal: str) -> int | None:
+    def farbwert(self, kanal: Farbkanal) -> int | None:
         """Wie viel Rot, Grün oder Blau sieht der Farbsensor? kanal: "rot", "gruen", "blau".
         """
         return self._laufen(self._roboter.farbwert(kanal))
 
-    def fernbedienung(self, taste: str) -> bool | None:
+    def fernbedienung(self, taste: Fernbedienungstaste) -> bool | None:
         """Wurde diese Taste der Infrarot-Fernbedienung gedrückt? Tasten: volume, mode, speed,
         forward, backward, left, right, play, dance, led, music, 1, 2, 3
         """
@@ -168,7 +170,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.firmware_version())
 
-    def gefuehl(self, name: str) -> None:
+    def gefuehl(self, name: Gefuehl) -> None:
         """Der Roboter zeigt ein Gefühl (Gesicht, Ton und Bewegung).
 
         Mögliche Gefühle: froehlich, wuetend, traurig, ueberrascht, aengstlich, angeekelt,
@@ -176,13 +178,13 @@ class VinciBot:
         """
         return self._laufen(self._roboter.gefuehl(name))
 
-    def geraeusch(self, name: str, warten: bool = True) -> None:
+    def geraeusch(self, name: Geraeusch, warten: bool = True) -> None:
         """Spielt ein Geräusch ab. Mögliche Geräusche: krankenwagen, polizei, feuerwehr, zug,
         zugpfeife, schiffshorn, flugzeug, auto, automotor, magnetbahn
         """
         return self._laufen(self._roboter.geraeusch(name, warten))
 
-    def helligkeit(self, seite: str = 'links') -> float | None:
+    def helligkeit(self, seite: Seite = 'links') -> float | None:
         """Wie hell ist es? seite: "links" oder "rechts"; Ergebnis in Prozent.
         """
         return self._laufen(self._roboter.helligkeit(seite))
@@ -197,7 +199,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.infrarot_angekommen(text))
 
-    def instrument(self, name: str) -> None:
+    def instrument(self, name: Instrument) -> None:
         """Wählt das Instrument für `ton()`, z. B. "klavier", "gitarre", "floete", "spieluhr".
         """
         return self._laufen(self._roboter.instrument(name))
@@ -227,7 +229,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.licht_aus())
 
-    def licht_einzeln(self, position: str, farbe: Farbe) -> None:
+    def licht_einzeln(self, position: Position, farbe: Farbe) -> None:
         """Ein einzelnes Licht in einer Farbe, z. B. licht_einzeln("links oben", "rot").
 
         Positionen (von vorne gesehen):
@@ -238,7 +240,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.licht_einzeln(position, farbe))
 
-    def lichter(self, farben: Mapping[str, Farbe]) -> None:
+    def lichter(self, farben: Mapping[Position, Farbe]) -> None:
         """Mehrere Lichter auf einmal, jedes mit eigener Farbe. Nicht genannte Lichter gehen aus.
 
             roboter.lichter({
@@ -250,13 +252,13 @@ class VinciBot:
         """
         return self._laufen(self._roboter.lichter(farben))
 
-    def lied(self, name: str, warten: bool = True) -> None:
+    def lied(self, name: Lied, warten: bool = True) -> None:
         """Spielt ein Lied ab. Mögliche Lieder: funkel, jingle bells, geburtstag, freude,
         holzsoldaten, jagdpolka
         """
         return self._laufen(self._roboter.lied(name, warten))
 
-    def linie_erkannt(self, nummer: int, farbe: str = 'schwarz') -> bool | None:
+    def linie_erkannt(self, nummer: Bodensensor, farbe: Linienfarbe = 'schwarz') -> bool | None:
         """Sieht Bodensensor 1-5 gerade "schwarz" oder "weiss"? True oder False.
         """
         return self._laufen(self._roboter.linie_erkannt(nummer, farbe))
@@ -271,13 +273,13 @@ class VinciBot:
         """
         return self._laufen(self._roboter.pause(schlaege))
 
-    def rad_drehen(self, rad: str, wert: float, einheit: str = 'grad', tempo: int = 50, richtung: str = 'uhrzeigersinn') -> None:
+    def rad_drehen(self, rad: Rad, wert: float, einheit: Einheit = 'grad', tempo: int = 50, richtung: Drehrichtung = 'uhrzeigersinn') -> None:
         """Lässt ein Rad drehen. rad: "links", "rechts" oder "beide";
         einheit: "grad", "umdrehungen" oder "sekunden"; richtung: "uhrzeigersinn" oder "gegen".
         """
         return self._laufen(self._roboter.rad_drehen(rad, wert, einheit, tempo, richtung))
 
-    def rad_stopp(self, rad: str = 'beide') -> None:
+    def rad_stopp(self, rad: Rad = 'beide') -> None:
         """Hält ein Rad an ("links", "rechts" oder "beide").
         """
         return self._laufen(self._roboter.rad_stopp(rad))
@@ -328,7 +330,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.sensorwerte())
 
-    def sieht_farbe(self, farbe: str) -> bool | None:
+    def sieht_farbe(self, farbe: SensorFarbe) -> bool | None:
         """Sieht der Farbsensor unten diese Farbe? Antwort: True oder False.
         Farben: weiss, rot, gelb, gruen, blau, lila, schwarz
         """
@@ -356,13 +358,13 @@ class VinciBot:
         """
         return self._laufen(self._roboter.strecke_mit_tempo(millimeter, tempo, warten))
 
-    def tanze(self, name: str) -> None:
+    def tanze(self, name: Tanz) -> None:
         """Der Roboter tanzt. Mögliche Tänze: tango, walzer, steppen, samba, polonaise, jazz,
         rock, polka
         """
         return self._laufen(self._roboter.tanze(name))
 
-    def taste_gedrueckt(self, taste: str) -> bool | None:
+    def taste_gedrueckt(self, taste: Taste) -> bool | None:
         """Wird eine Taste des Roboters gerade gedrückt? taste: "dreieck", "quadrat" oder "kreis".
         """
         return self._laufen(self._roboter.taste_gedrueckt(taste))
@@ -377,7 +379,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.tempo_aendern(aenderung))
 
-    def ton(self, note: str = 'c', schlaege: float = 1, oktave: int = 4) -> None:
+    def ton(self, note: Note = 'c', schlaege: float = 1, oktave: int = 4) -> None:
         """Spielt einen Ton. note: c d e f g a h (h ist das deutsche 'b'); schlaege: Länge;
         oktave: 3 tiefer, 4 normal, 5 höher.
         """
@@ -398,7 +400,7 @@ class VinciBot:
         """
         return self._laufen(self._roboter.trommel(name, schlaege))
 
-    def untergrund(self, nummer: int) -> int | None:
+    def untergrund(self, nummer: Bodensensor) -> int | None:
         """Wie hell ist der Boden unter dem Sensor 1 bis 5? 0 = dunkel (Linie), 100 = hell.
         """
         return self._laufen(self._roboter.untergrund(nummer))

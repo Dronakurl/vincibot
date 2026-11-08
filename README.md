@@ -138,6 +138,8 @@ links unten   rechts unten
 
 Gibst du etwas Unbekanntes an, sagt dir das Programm in einer deutschen Fehlermeldung, welche Werte möglich sind.
 
+**Tippfehler erkennt schon dein Editor:** Alle Befehle mit festen Wörtern (Farben, Gefühle, Richtungen …) haben passende Typangaben. Schreibst du `roboter.gefuehl("froelich")`, unterstreicht der Editor (z. B. Zed oder VS Code mit basedpyright/Pylance) das Wort rot, und die Autovervollständigung schlägt dir die erlaubten Wörter vor. Die Listen stehen in [`vincibot/_typen.py`](vincibot/_typen.py).
+
 ## 6. Beispielprogramme
 
 Im Ordner [`beispiele/`](beispiele/) liegen kleine Programme zum Ausprobieren und Verändern:
