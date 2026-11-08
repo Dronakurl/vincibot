@@ -1,9 +1,12 @@
 """Internes: Bluetooth-Verbindung (asynchron). Anfänger nutzen stattdessen `VinciBot`."""
 import asyncio
+import shutil
+import sys
 import time
 from dataclasses import dataclass
 
 from bleak import BleakClient, BleakScanner
+from bleak.backends.device import BLEDevice
 from bleak.backends.characteristic import BleakGATTCharacteristic
 
 from ._protokoll import BEGRUESSUNG, Sensorwerte, baue_befehlspaket, baue_paket, entpacke
@@ -41,13 +44,41 @@ class Verbindung:
         self._begruessung: asyncio.Future[list[int]] | None = None
         self._letzte_meldung: tuple[bytes, float] = (b"", 0.0)
 
-    async def verbinden(self) -> None:
+    async def _suche(self) -> BLEDevice | None:
         if self.adresse:
-            geraet = await BleakScanner.find_device_by_address(self.adresse, timeout=self.suchdauer)
-        else:
-            geraet = await BleakScanner.find_device_by_filter(
-                lambda g, _: bool(g.name) and g.name.startswith(self.namensanfang),
-                timeout=self.suchdauer)
+            return await BleakScanner.find_device_by_address(self.adresse, timeout=self.suchdauer)
+        return await BleakScanner.find_device_by_filter(
+            lambda g, _: bool(g.name) and g.name.startswith(self.namensanfang),
+            timeout=self.suchdauer)
+
+    async def _haengende_verbindung_loesen(self) -> bool:
+        """Linux: Ein Roboter, der im System noch als 'verbunden' gilt (z. B. nach einem
+        abgebrochenen Programm), wird nicht mehr gefunden. Dann trennen wir ihn hier."""
+        if not sys.platform.startswith("linux") or shutil.which("bluetoothctl") is None:
+            return False
+        prozess = await asyncio.create_subprocess_exec(
+            "bluetoothctl", "devices", "Connected",
+            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
+        ausgabe, _ = await prozess.communicate()
+        gefunden = False
+        for zeile in ausgabe.decode("utf-8", "replace").splitlines():
+            teile = zeile.split(maxsplit=2)
+            if len(teile) == 3 and teile[0] == "Device" and (
+                    teile[1].upper() == (self.adresse or "").upper()
+                    or (not self.adresse and teile[2].startswith(self.namensanfang))):
+                trennen = await asyncio.create_subprocess_exec(
+                    "bluetoothctl", "disconnect", teile[1],
+                    stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
+                _ = await trennen.wait()
+                gefunden = True
+        if gefunden:
+            await asyncio.sleep(3)
+        return gefunden
+
+    async def verbinden(self) -> None:
+        geraet = await self._suche()
+        if geraet is None and await self._haengende_verbindung_loesen():
+            geraet = await self._suche()
         if geraet is None:
             raise VerbindungsFehler(
                 "Kein VinciBot gefunden. Ist er eingeschaltet und nicht schon mit einem anderen"

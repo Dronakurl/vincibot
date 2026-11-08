@@ -6,6 +6,8 @@ ACHTUNG: Diese Datei wird automatisch erzeugt (python werkzeuge/erzeuge_roboter.
 from __future__ import annotations
 
 import asyncio
+import atexit
+import contextlib
 import threading
 from collections.abc import Callable, Coroutine, Mapping, Sequence
 from types import TracebackType
@@ -51,6 +53,14 @@ class VinciBot:
         except BaseException:
             self._beende_schleife()
             raise
+        self._offen: bool = True
+        # Falls `trennen()` vergessen wird, trennt Python beim Programmende automatisch.
+        _ = atexit.register(self._beim_beenden)
+
+    def _beim_beenden(self) -> None:
+        if self._offen:
+            with contextlib.suppress(Exception):
+                self.trennen()
 
     def _laufen(self, aufgabe: Coroutine[object, object, _T]) -> _T:
         return asyncio.run_coroutine_threadsafe(aufgabe, self._schleife).result()
@@ -60,7 +70,11 @@ class VinciBot:
         self._faden.join(timeout=2)
 
     def trennen(self) -> None:
-        """Beendet die Verbindung zum Roboter."""
+        """Beendet die Verbindung zum Roboter (geschieht am Programmende auch von selbst)."""
+        if not self._offen:
+            return
+        self._offen = False
+        atexit.unregister(self._beim_beenden)
         try:
             self._laufen(self._roboter.trennen())
         finally:

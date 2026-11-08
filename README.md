@@ -51,8 +51,9 @@ Danach kannst du Programme starten, zum Beispiel: `python beispiele/01_hallo.py`
 ## 3. Roboter verbinden
 
 1. **Roboter einschalten.**
-2. Der Roboter darf **nicht gleichzeitig** mit einem anderen Programm verbunden sein, zum Beispiel mit der MatataCode-Seite im Browser (dort vorher auf "Trennen" klicken oder den Tab schließen). Er kann nur mit einem Gerät sprechen.
-3. Dein Programm sucht den Roboter selbst. Beim Verbinden piept er einmal – das ist normal.
+2. Am Programmende trennt `vincibot` die Verbindung von selbst, auch wenn du `trennen()` vergessen hast. Bleibt der Roboter nach einem abgebrochenen Programm unter Linux als „verbunden“ hängen, löst `vincibot` das beim nächsten Verbinden selbst.
+3. Der Roboter darf **nicht gleichzeitig** mit einem anderen Programm verbunden sein, zum Beispiel mit der MatataCode-Seite im Browser (dort vorher auf "Trennen" klicken oder den Tab schließen). Er kann nur mit einem Gerät sprechen.
+4. Dein Programm sucht den Roboter selbst. Beim Verbinden piept er einmal – das ist normal.
 
 Gibt es mehrere Roboter in der Nähe, nutzt du die Adresse deines Roboters: `VinciBot(adresse="AA:BB:CC:DD:EE:FF")`. Auf Linux findest du sie mit `bluetoothctl devices`.
 
