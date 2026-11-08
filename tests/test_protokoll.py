@@ -36,3 +36,14 @@ def test_roboter_py_ist_aktuell():
     modul = importlib.util.module_from_spec(spez)
     spez.loader.exec_module(modul)
     assert (wurzel / "vincibot" / "roboter.py").read_text(encoding="utf-8") == modul.erzeuge()
+
+
+def test_bild_bytes_wie_die_hersteller_oberflaeche():
+    """Erstes Pixel einer 8er-Gruppe = niedrigstes Bit (binaryToHex der Web-Oberfläche)."""
+    from vincibot.asynchron import VinciBotAsync
+    zeilen = ["#" + "." * 15, ".#" + "." * 6 + "#" + "." * 7] + ["." * 16] * 6
+    daten = VinciBotAsync._bild_daten(zeilen)
+    assert daten[0] == 0x01 and daten[1] == 0x00
+    assert daten[2] == 0x02 and daten[3] == 0x01
+    # Beispiel aus der API-Beschreibung (Auge): 0x38 = Pixel 3, 4, 5
+    assert VinciBotAsync._bild_daten(["...###.." + "." * 8] + ["." * 16] * 7)[0] == 0x38

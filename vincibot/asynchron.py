@@ -357,7 +357,8 @@ class VinciBotAsync:
         zeilen = list(zeilen)
         if len(zeilen) != 8 or any(len(z) != 16 for z in zeilen):
             raise RoboterFehler("Das Bild braucht genau 8 Zeilen mit je 16 Zeichen.")
-        return [sum(1 << (7 - i) for i, z in enumerate(h) if z == "#")
+        # Wie die Hersteller-Oberfläche: Das erste Pixel einer 8er-Gruppe ist das niedrigste Bit.
+        return [sum(1 << i for i, z in enumerate(h) if z == "#")
                 for zeile in zeilen for h in (zeile[:8], zeile[8:])]
 
     async def display_richtung(self, richtung: str) -> None:

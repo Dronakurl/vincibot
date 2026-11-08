@@ -1,5 +1,7 @@
 """Testprogramm"""
+
 import random
+
 from vincibot import VinciBot
 
 zaehler = 0
@@ -12,7 +14,8 @@ with VinciBot() as roboter:
         roboter.rechts(90)
     while True:
         zaehler += 1
-        if roboter.abstand() < 20:
+        abstand = roboter.abstand()
+        if abstand is not None and abstand < 20:
             roboter.licht((255, 0, 0))
             roboter.rueckwaerts(5)
         elif roboter.sieht_farbe("blau") and not roboter.taste_gedrueckt("kreis"):
