@@ -38,15 +38,17 @@ with VinciBot() as roboter:
 
 ## 2. Installieren
 
-Öffne ein Terminal im Ordner dieses Projekts und gib ein:
+Öffne ein Terminal und gib ein:
 
 ```bash
 python3 -m venv .venv                # eigene Python-Umgebung anlegen (einmalig)
 source .venv/bin/activate            # Umgebung einschalten (Windows: .venv\Scripts\activate)
-pip install -e .                     # vincibot installieren
+pip install vincibot                 # vincibot installieren
 ```
 
-Danach kannst du Programme starten, zum Beispiel: `python beispiele/01_hallo.py`
+Mit [uv](https://docs.astral.sh/uv/) geht es auch: `uv add vincibot`. Wenn du den Quellcode ändern willst, lade dieses Repository herunter und installiere es mit `pip install -e .`.
+
+Danach kannst du eigene Programme schreiben. Fertige Beispiele (`beispiele/01_hallo.py` usw.) findest du in diesem Repository.
 
 ## 3. Roboter verbinden
 
