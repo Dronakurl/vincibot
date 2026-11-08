@@ -43,6 +43,7 @@ class Verbindung:
         self._erwartet: dict[int, asyncio.Future[Antwort]] = {}
         self._begruessung: asyncio.Future[list[int]] | None = None
         self._letzte_meldung: tuple[bytes, float] = (b"", 0.0)
+        self.firmware: str | None = None
 
     async def _suche(self) -> BLEDevice | None:
         if self.adresse:
@@ -76,9 +77,9 @@ class Verbindung:
         return gefunden
 
     async def verbinden(self) -> None:
+        # Erst prüfen, ob der Roboter im System noch als "verbunden" hängt (spart die Wartezeit der Suche).
+        _ = await self._haengende_verbindung_loesen()
         geraet = await self._suche()
-        if geraet is None and await self._haengende_verbindung_loesen():
-            geraet = await self._suche()
         if geraet is None:
             raise VerbindungsFehler(
                 "Kein VinciBot gefunden. Ist er eingeschaltet und nicht schon mit einem anderen"
@@ -130,8 +131,22 @@ class Verbindung:
             erwartet = self._erwartet.pop(antwort.sequenz, None)
             if erwartet and not erwartet.done():
                 erwartet.set_result(antwort)
+        elif n[0] == 1 and len(n) >= 5:
+            self.firmware = f"{n[2]}.{n[3]}.{n[4]}"
+            if self._begruessung and not self._begruessung.done():
+                self._begruessung.set_result(n)
         elif self._begruessung and not self._begruessung.done():
             self._begruessung.set_result(n)
+
+    async def firmware_abfragen(self) -> str | None:
+        """Fragt die Firmware-Version des Roboters ab, z. B. "1.2.0"."""
+        self._begruessung = asyncio.get_running_loop().create_future()
+        await self._sende(baue_paket([1, 1]))
+        try:
+            _ = await asyncio.wait_for(self._begruessung, 3)
+        except asyncio.TimeoutError:
+            pass
+        return self.firmware
 
     async def befehl(self, code: str, sequenz: int = 0, zeitlimit: float = 15) -> Antwort | None:
         """Führt einen Python-Befehl auf dem Bot aus und wartet auf seine Antwort."""

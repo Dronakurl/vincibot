@@ -163,6 +163,11 @@ class VinciBot:
         """
         return self._laufen(self._roboter.fernbedienung(taste))
 
+    def firmware_version(self) -> str | None:
+        """Die Firmware-Version des Roboters als Text, z. B. "1.2.0".
+        """
+        return self._laufen(self._roboter.firmware_version())
+
     def gefuehl(self, name: str) -> None:
         """Der Roboter zeigt ein Gefühl (Gesicht, Ton und Bewegung).
 

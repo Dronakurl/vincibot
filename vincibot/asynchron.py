@@ -462,6 +462,10 @@ class VinciBotAsync:
             await asyncio.sleep(intervall)
 
     # ------------------------------------------------------------ Für Fortgeschrittene
+    async def firmware_version(self) -> str | None:
+        """Die Firmware-Version des Roboters als Text, z. B. "1.2.0"."""
+        return await self._verbindung.firmware_abfragen()
+
     async def roh(self, befehl: str, zeitlimit: float = 15) -> str | None:
         """Führt beliebigen MicroPython-Code des Roboters aus (siehe docs/firmware-api/) und gibt
         die Antwort als Text zurück. Beispiel: `await roboter.roh("motion.stop_moving()")`."""

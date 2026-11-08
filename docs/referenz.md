@@ -317,6 +317,10 @@ async for werte in roboter.sensorstrom():
 
 ## Für Fortgeschrittene
 
+### `firmware_version() -> 'str | None'`
+
+Die Firmware-Version des Roboters als Text, z. B. "1.2.0".
+
 ### `roh(befehl: 'str', zeitlimit: 'float' = 15) -> 'str | None'`
 
 Führt beliebigen MicroPython-Code des Roboters aus (siehe docs/firmware-api/) und gibt

@@ -28,7 +28,7 @@ Ohne sie führt der Roboter keine Befehle aus (nur ein Piepton):
 | Nutzdaten | Bedeutung | Antwort |
 |---|---|---|
 | `7e 02 02 00 00` | neues Protokoll einschalten | `fe 06 7e 01 00 00 0b 96` |
-| `01 01` | Version abfragen | Versionsnummer |
+| `01 01` | Version abfragen | `01 01 <major> <minor> <patch> …` (z. B. 1.2.4); in der Bibliothek: `firmware_version()` |
 
 ## Befehle
 Nutzdaten: `70 00 <Sequenz> <Python-Befehl als ASCII>`, z. B. `motion.move_position("forward", 10, "cm")`.
@@ -61,3 +61,15 @@ Weitere Paketarten: `0x33` Tasten, `0x7e` Infrarot (laut Web-Oberfläche).
 - Der Roboter akzeptiert nur **eine** Verbindung gleichzeitig.
 - Befehle mit falschen Argumenten (z. B. Zahl statt Name) lösen Fehlertöne aus. Die offizielle
   Beschreibung der Roboter-Befehle liegt in `docs/firmware-api/`.
+
+## Firmware
+- Die Version kommt in den Bytes 2–4 der Antwort auf `01 01` (Stand dieser Doku: Roboter mit **1.2.4**).
+- Die Web-Oberfläche verlangt für die Motor-Erweiterung mindestens **V1.2.3** (und V1.2.0 für das
+  AI-Vision-Modul) und bietet sonst ein Update an.
+- Update-Wege laut Web-Oberfläche: per WLAN (der Roboter lädt die Firmware selbst, `ota.ota_start()`) oder
+  über USB mit der Wiederherstellungs-Datei
+  `https://matatalab-ota.oss-accelerate.aliyuncs.com/vincibot/vincibot_firmware_for_recovery.bin`
+  (Datei vom 08.04.2026, 16,7 MB; Wiederherstellung nur mit Anleitung des Herstellers!).
+- Eine öffentliche Liste der VinciBot-Firmware-Versionen habe ich nicht gefunden. Auf
+  matatastudio.com/download.html liegt nur die Firmware der *MatataBot* (V3.1.5). Welche Version die
+  neueste ist, sagt die Web-Oberfläche beim Verbinden.

@@ -20,7 +20,7 @@ ABSCHNITTE = [
                   "farbsensor_kalibrieren"]),
     ("Infrarot", ["sende_infrarot", "empfange_infrarot", "infrarot_angekommen", "fernbedienung"]),
     ("Warten", ["warte", "warte_bis", "sensorstrom"]),
-    ("Für Fortgeschrittene", ["roh"]),
+    ("Für Fortgeschrittene", ["firmware_version", "roh"]),
 ]
 
 zeilen = ["# Alle Befehle auf einen Blick", "",
